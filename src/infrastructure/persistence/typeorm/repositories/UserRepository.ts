@@ -1,10 +1,16 @@
 import { User } from 'src/core/user/entities/User.entity';
 import { IUserRepository } from 'src/core/user/repositories/IUserRepository.interface';
 import { UserEntity } from '../../typeorm/entities/UserEntity';
-import { AppDataSource } from '../../typeorm/data-source';
+import { AppDataSource } from '../data-source';
+import { Id } from 'src/core/user/valueObjects/Id.vo';
+import { Email } from 'src/core/user/valueObjects/Email.vo';
+import { Password } from 'src/core/user/valueObjects/Password.vo';
+import { BcryptPasswordHasher } from 'src/infrastructure/services/BcryptPasswordHasher';
+import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
 
 export class UserRepository implements IUserRepository {
   private readonly repository = AppDataSource.getRepository(UserEntity);
+  private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
 
   async save(user: User): Promise<void> {
     const entity = new UserEntity();
@@ -22,7 +28,7 @@ export class UserRepository implements IUserRepository {
     return new User(
       new Id(entity.id),
       new Email(entity.email),
-      new Password(entity.password)
+      new Password(entity.password, this.hasher),
     );
   }
 
@@ -33,7 +39,7 @@ export class UserRepository implements IUserRepository {
     return new User(
       new Id(entity.id),
       new Email(entity.email),
-      new Password(entity.password)
+      new Password(entity.password, this.hasher),
     );
   }
 }

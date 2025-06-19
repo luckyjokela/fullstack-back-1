@@ -1,10 +1,17 @@
 import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
 
 export class Password {
+  private readonly value: string;
+
   constructor(
-    private readonly value: string,
+    value: string,
     private readonly hasher: IPasswordHasher,
-  ) {}
+  ) {
+    if (value.length < 8) {
+      throw new Error('Password too short');
+    }
+    this.value = value;
+  }
 
   static create(raw: string, hasher: IPasswordHasher): Password {
     if (raw.length < 8) {
@@ -14,11 +21,11 @@ export class Password {
     return new Password(hashed, hasher);
   }
 
-  compare(plainText: string): boolean {
-    return this.hasher.compare(plainText, this.value);
-  }
-
   getValue(): string {
     return this.value;
+  }
+
+  compare(plainText: string): boolean {
+    return this.hasher.compare(plainText, this.value);
   }
 }

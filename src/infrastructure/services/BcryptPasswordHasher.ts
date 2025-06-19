@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
 import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
+import * as bcrypt from 'bcrypt';
 
 export class BcryptPasswordHasher implements IPasswordHasher {
   hash(password: string): string {
