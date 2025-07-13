@@ -1,9 +1,9 @@
 import { Result } from 'src/core/shared/types/Result.type';
-import { User } from 'src/core/user/entities/User.entity';
-import { IUserRepository } from 'src/core/user/repositories/IUserRepository.interface';
-import { Email } from 'src/core/user/valueObjects/Email.vo';
-import { Id } from 'src/core/user/valueObjects/Id.vo';
-import { Password } from 'src/core/user/valueObjects/Password.vo';
+import { User } from 'src/core/entities/User';
+import { IUserRepository } from 'src/core/repositories/IUserRepository.interface';
+import { Email } from 'src/core/entities/variableObjects/Email';
+import { Id } from 'src/core/entities/variableObjects/Id';
+import { Password } from 'src/core/entities/variableObjects/Password';
 import { BcryptPasswordHasher } from 'src/infrastructure/services/BcryptPasswordHasher';
 import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
 import { getAppErrorMessage } from 'src/core/shared/errors/AppError';
