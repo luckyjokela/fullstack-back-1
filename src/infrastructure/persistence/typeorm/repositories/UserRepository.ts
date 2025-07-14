@@ -1,7 +1,7 @@
 import { User } from 'src/core/entities/User';
 import { IUserRepository } from 'src/core/repositories/IUserRepository.interface';
 import { UserEntity } from '../../typeorm/entities/UserEntity';
-import { AppDataSource } from '../data-source';
+import { AppPostgreSQLDataSource } from '../data-source';
 import { Id } from 'src/core/entities/variableObjects/Id';
 import { Email } from 'src/core/entities/variableObjects/Email';
 import { Password } from 'src/core/entities/variableObjects/Password';
@@ -10,7 +10,8 @@ import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.inter
 import { Username } from 'src/core/entities/variableObjects/Bio';
 
 export class UserRepository implements IUserRepository {
-  private readonly repository = AppDataSource.getRepository(UserEntity);
+  private readonly repository =
+    AppPostgreSQLDataSource.getRepository(UserEntity);
   private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
 
   async save(user: User): Promise<void> {
@@ -47,8 +48,8 @@ export class UserRepository implements IUserRepository {
     );
   }
 
-  async findByUsername(email: string): Promise<User | null> {
-    const entity = await this.repository.findOneBy({ email });
+  async findByUsername(username: string): Promise<User | null> {
+    const entity = await this.repository.findOneBy({ username });
     if (!entity) return null;
 
     return new User(

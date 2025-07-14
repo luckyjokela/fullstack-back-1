@@ -15,15 +15,24 @@ export class UserController {
 
   @Post()
   async register(@Body() dto: CreateUserDto) {
-    const result = await this.useCase.execute(dto.email, dto.password);
+    const result = await this.useCase.execute(
+      dto.email,
+      dto.password,
+      dto.id,
+      // dto.username,
+      // dto.name,
+      // dto.middleName,
+      // dto.surname,
+    );
 
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
     }
 
     return {
-      id: result.data.id.getValue(),
-      email: result.data.email.getValue(),
+      id: result.data.getId(),
+      email: result.data.getEmail(),
+      username: result.data.getUsername(),
     };
   }
 }
