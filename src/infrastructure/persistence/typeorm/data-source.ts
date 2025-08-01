@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { UserEntity } from './entities/UserEntity';
 
 export const AppPostgreSQLDataSource = new DataSource({
-  type: 'postgres', // или mysql2 / sqlite
+  type: 'postgres',
   host: 'localhost',
   port: 5432,
   username: 'your_db_user',
@@ -32,7 +32,7 @@ export const AppMySQLDataSource = new DataSource({
 export const AppSqliteDataSource = new DataSource({
   type: 'sqlite',
   host: 'localhost',
-  port: 5432,
+  port: 5400,
   username: 'your_db_user',
   password: 'your_password',
   database: 'test_db',

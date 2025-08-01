@@ -14,12 +14,12 @@ export class UserEntity {
   @Column({ name: 'Username', unique: true })
   username!: string;
 
-  @Column({ name: 'Name', nullable: true })
-  name!: string | null;
+  @Column({ name: 'Name' })
+  name!: string;
 
-  @Column({ name: 'MiddleName', nullable: true })
-  middleName!: string | null;
+  @Column({ name: 'MiddleName' })
+  middleName!: string;
 
-  @Column({ name: 'Surname', nullable: true })
-  surname!: string | null;
+  @Column({ name: 'Surname' })
+  surname!: string;
 }

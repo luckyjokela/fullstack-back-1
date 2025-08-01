@@ -1,31 +1,32 @@
 import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
+import { Result } from '../../shared/types/Result.type';
 
 export class Password {
   private readonly value: string;
 
-  constructor(
-    value: string,
-    private readonly hasher: IPasswordHasher,
-  ) {
-    if (value.length < 8) {
-      throw new Error('Password too short');
-    }
-    this.value = value;
+  private constructor(hashedValue: string) {
+    this.value = hashedValue;
   }
 
-  static create(raw: string, hasher: IPasswordHasher): Password {
-    if (raw.length < 8) {
-      throw new Error('Password too short');
+  static create(password: string, hasher: IPasswordHasher): Result<Password> {
+    if (!password || password.length < 8) {
+      return {
+        success: false,
+        error: 'Password must be at least 8 characters long',
+      };
     }
-    const hashed = hasher.hash(raw);
-    return new Password(hashed, hasher);
+    const hashed = hasher.hash(password);
+    return { success: true, data: new Password(hashed) };
+  }
+
+  static fromHash(hash: string): Result<Password> {
+    if (!hash || typeof hash !== 'string') {
+      return { success: false, error: 'Invalid password hash' };
+    }
+    return { success: true, data: new Password(hash) };
   }
 
   getValue(): string {
     return this.value;
-  }
-
-  compare(plainText: string): boolean {
-    return this.hasher.compare(plainText, this.value);
   }
 }

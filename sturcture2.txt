@@ -1,0 +1,91 @@
+|   .gitignore
+|   .prettierrc
+|   eslint.config.mjs
+|   nest-cli.json
+|   package.json
+|   pnpm-lock.yaml
+|   README.md
+|   structure.txt
+|   tsconfig.build.json
+|   tsconfig.json
+|   
++---src
+|   |   main.ts
+|   |   
+|   +---application
+|   |   +---dtos
+|   |   |       Login.dto.ts
+|   |   |       
+|   |   \---useCases
+|   |       +---createUser
+|   |       |       CreateUser.dto.ts
+|   |       |       CreateUser.usecase.ts
+|   |       |       
+|   |       \---deleteUser
+|   +---auth
+|   |   +---guards
+|   |   |       JwtAuthGuard.ts
+|   |   |       
+|   |   \---strategies
+|   |           JwtStrategy.ts
+|   |           
+|   +---core
+|   |   +---entities
+|   |   |   |   User.ts
+|   |   |   |   
+|   |   |   \---variableObjects
+|   |   |           Bio.ts
+|   |   |           Email.ts
+|   |   |           Id.ts
+|   |   |           Password.ts
+|   |   |           Uuid.ts
+|   |   |           
+|   |   +---repositories
+|   |   |       IUserRepository.interface.ts
+|   |   |       
+|   |   +---services
+|   |   |       UserService.ts
+|   |   |       
+|   |   \---shared
+|   |       +---errors
+|   |       |       AppError.ts
+|   |       |       
+|   |       +---interface
+|   |       |       IPasswordHasher.interface.ts
+|   |       |       
+|   |       \---types
+|   |               Result.type.ts
+|   |               
+|   +---infrastructure
+|   |   +---other
+|   |   +---persistence
+|   |   |   +---prisma
+|   |   |   \---typeorm
+|   |   |       |   data-source.ts
+|   |   |       |   
+|   |   |       +---entities
+|   |   |       |       UserEntity.ts
+|   |   |       |       
+|   |   |       \---repositories
+|   |   |               UserRepository.ts
+|   |   |               
+|   |   \---services
+|   |           BcryptPasswordHasher.ts
+|   |           
+|   \---interfaces
+|       +---controllers
+|       |       app.controller.spec.ts
+|       |       app.controller.ts
+|       |       UserController.ts
+|       |       
+|       +---modules
+|       |       app.module.ts
+|       |       
+|       \---services
+|               app.service.ts
+|               
+\---test
+        app.e2e-spec.ts
+        jest-e2e.json
+        user.controller.spec.ts
+        

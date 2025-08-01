@@ -1,11 +1,16 @@
+import { Result } from '../../shared/types/Result.type';
 export class Email {
-  constructor(private readonly value: string) {
-    if (!this.isValid(value)) throw new Error('Invalid email');
+  constructor(private readonly value: string) {}
+
+  static create(email: string): Result<Email> {
+    if (!this.isValid(email)) {
+      return { success: false, error: 'Invalid email' };
+    }
+    return { success: true, data: new Email(email) };
   }
 
-  private isValid(email: string): boolean {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
+  private static isValid(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
   getValue(): string {

@@ -6,7 +6,7 @@ const uuidSchema = z.string().uuid();
 export class Uuid {
   private readonly _value: string;
 
-  constructor(value?: string) {
+  private constructor(value?: string) {
     const parsed = value ? uuidSchema.parse(value) : uuids4();
     this._value = parsed;
   }
