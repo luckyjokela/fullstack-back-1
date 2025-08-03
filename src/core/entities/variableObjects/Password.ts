@@ -1,4 +1,4 @@
-import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
+import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
 import { Result } from '../../shared/types/Result.type';
 
 export class Password {

@@ -1,19 +1,21 @@
-import { Result } from 'src/core/shared/types/Result.type';
-import { User } from 'src/core/entities/User';
-import { IUserRepository } from 'src/core/repositories/IUserRepository.interface';
-import { Email } from 'src/core/entities/variableObjects/Email';
-import { Id } from 'src/core/entities/variableObjects/IdGenerator';
-import { Password } from 'src/core/entities/variableObjects/Password';
-import { BcryptPasswordHasher } from 'src/infrastructure/services/BcryptPasswordHasher';
-import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
-import { getAppErrorMessage } from 'src/core/shared/errors/AppError';
+import { Result } from '../../../core/shared/types/Result.type';
+import { User } from '../../../core/entities/User';
+import { IUserRepository } from '../../../core/repositories/IUserRepository.interface';
+import { Email } from '../../../core/entities/variableObjects/Email';
+import { Id } from '../../../core/entities/variableObjects/IdGenerator';
+import { Password } from '../../../core/entities/variableObjects/Password';
+import { BcryptPasswordHasher } from '../../../infrastructure/services/BcryptPasswordHasher';
+import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
+import { getAppErrorMessage } from '../../../core/shared/errors/AppError';
 import {
   MiddleName,
   Name,
   Surname,
   Username,
-} from 'src/core/entities/variableObjects/UserBio';
+} from '../../../core/entities/variableObjects/UserBio';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CreateUserUseCase {
   private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
 

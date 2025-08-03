@@ -1,17 +1,20 @@
-import { Result } from 'src/core/shared/types/Result.type';
-import { User } from 'src/core/entities/User';
-import { IUserRepository } from 'src/core/repositories/IUserRepository.interface';
-import { Email } from 'src/core/entities/variableObjects/Email';
-import { BcryptPasswordHasher } from 'src/infrastructure/services/BcryptPasswordHasher';
-import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
-import { getAppErrorMessage } from 'src/core/shared/errors/AppError';
+import { Result } from '../../../core/shared/types/Result.type';
+import { User } from '../../../core/entities/User';
+import { IUserRepository } from '../../../core/repositories/IUserRepository.interface';
+import { Email } from '../../../core/entities/variableObjects/Email';
+import { BcryptPasswordHasher } from '../../../infrastructure/services/BcryptPasswordHasher';
+import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
+import { getAppErrorMessage } from '../../../core/shared/errors/AppError';
 import {
   Username,
   Name,
   MiddleName,
   Surname,
-} from 'src/core/entities/variableObjects/UserBio';
+} from '../../../core/entities/variableObjects/UserBio';
+import { Password } from '../../../core/entities/variableObjects/Password';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UpdateUserUseCase {
   private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
 
@@ -19,6 +22,7 @@ export class UpdateUserUseCase {
 
   async execute(
     id: string,
+    password: string,
     email: string,
     username: string,
     name: string,
@@ -31,12 +35,16 @@ export class UpdateUserUseCase {
         return { success: false, error: 'User not found' };
       }
 
+      const passwordOrError = Password.create(password, this.hasher);
       const emailOrError = Email.create(email);
       const usernameOrError = Username.create(username);
       const nameOrError = Name.create(name);
       const surnameOrError = Surname.create(surname);
       const middleNameOrError = MiddleName.create(middleName);
 
+      if (!passwordOrError.success) {
+        return { success: false, error: passwordOrError.error };
+      }
       if (!emailOrError.success) {
         return { success: false, error: emailOrError.error };
       }

@@ -1,4 +1,4 @@
-import { Result } from 'src/core/shared/types/Result.type';
+import { Result } from '../../../core/shared/types/Result.type';
 import { v4 as uuid4 } from 'uuid';
 
 export class Id {

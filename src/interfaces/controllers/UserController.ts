@@ -6,9 +6,9 @@ import {
   HttpException,
 } from '@nestjs/common';
 
-import { CreateUserUseCase } from 'src/application/useCases/createUser/CreateUser.usecase';
-import { CreateUserDto } from 'src/application/useCases/createUser/CreateUser.dto';
-import { Result } from 'src/core/shared/types/Result.type';
+import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
+import { CreateUserDto } from '../../application/useCases/createUser/CreateUser.dto';
+import { Result } from '../../core/shared/types/Result.type';
 
 @Controller('users')
 export class UserController {
@@ -26,6 +26,7 @@ export class UserController {
     }>
   > {
     const result = await this.useCase.execute(
+      dto.id,
       dto.email,
       dto.password,
       dto.username,
@@ -41,7 +42,7 @@ export class UserController {
     return {
       success: true,
       data: {
-        id: result.data.getId(),
+        id: result.data.getIdValue(),
         email: result.data.getEmail(),
         username: result.data.getUsername(),
         name: result.data.getName(),

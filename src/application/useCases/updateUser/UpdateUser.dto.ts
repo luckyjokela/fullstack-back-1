@@ -1,4 +1,5 @@
-export class CreateUserDto {
+export class UpdateUserDto {
+  id!: string;
   email!: string;
   password!: string;
   username!: string;

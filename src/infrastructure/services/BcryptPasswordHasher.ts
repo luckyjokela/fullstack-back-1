@@ -1,4 +1,4 @@
-import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
+import { IPasswordHasher } from '../../core/shared/interface/IPasswordHasher.interface';
 import * as bcrypt from 'bcrypt';
 
 export class BcryptPasswordHasher implements IPasswordHasher {

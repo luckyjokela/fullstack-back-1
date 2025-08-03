@@ -1,18 +1,18 @@
-import { User } from 'src/core/entities/User';
-import { IUserRepository } from 'src/core/repositories/IUserRepository.interface';
+import { User } from '../../../../core/entities/User';
+import { IUserRepository } from '../../../../core/repositories/IUserRepository.interface';
 import { UserEntity } from '../../typeorm/entities/UserEntity';
 import { AppPostgreSQLDataSource } from '../data-source';
-import { Id } from 'src/core/entities/variableObjects/IdGenerator';
-import { Email } from 'src/core/entities/variableObjects/Email';
-import { Password } from 'src/core/entities/variableObjects/Password';
-import { BcryptPasswordHasher } from 'src/infrastructure/services/BcryptPasswordHasher';
-import { IPasswordHasher } from 'src/core/shared/interface/IPasswordHasher.interface';
+import { Id } from '../../../../core/entities/variableObjects/IdGenerator';
+import { Email } from '../../../../core/entities/variableObjects/Email';
+import { Password } from '../../../../core/entities/variableObjects/Password';
+import { BcryptPasswordHasher } from '../../../../infrastructure/services/BcryptPasswordHasher';
+import { IPasswordHasher } from '../../../../core/shared/interface/IPasswordHasher.interface';
 import {
   MiddleName,
   Name,
   Surname,
   Username,
-} from 'src/core/entities/variableObjects/UserBio';
+} from '../../../../core/entities/variableObjects/UserBio';
 
 export class UserRepository implements IUserRepository {
   private readonly repository =
