@@ -32,12 +32,12 @@ export class User {
     return this.username.getValue();
   }
   getName(): string {
-    return this.name?.getValue();
+    return this.name.getValue();
   }
   getSurname(): string {
-    return this.surname?.getValue();
+    return this.surname.getValue();
   }
   getMiddleName(): string {
-    return this.middleName?.getValue();
+    return this.middleName.getValue();
   }
 }

@@ -11,18 +11,22 @@ import {
   MiddleName,
   Surname,
 } from '../../../core/entities/variableObjects/UserBio';
-import { Password } from '../../../core/entities/variableObjects/Password';
-import { Injectable } from '@nestjs/common';
+// import { Password } from '../../../core/entities/variableObjects/Password';
+import { UserRepository } from '../../../infrastructure/persistence/typeorm/repositories/UserRepository';
+import { Injectable, Inject } from '@nestjs/common';
 
 @Injectable()
 export class UpdateUserUseCase {
   private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
 
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject(UserRepository)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(
     id: string,
-    password: string,
+    // password: string,
     email: string,
     username: string,
     name: string,
@@ -35,16 +39,16 @@ export class UpdateUserUseCase {
         return { success: false, error: 'User not found' };
       }
 
-      const passwordOrError = Password.create(password, this.hasher);
+      // const passwordOrError = Password.create(password, this.hasher);
       const emailOrError = Email.create(email);
       const usernameOrError = Username.create(username);
       const nameOrError = Name.create(name);
       const surnameOrError = Surname.create(surname);
       const middleNameOrError = MiddleName.create(middleName);
 
-      if (!passwordOrError.success) {
-        return { success: false, error: passwordOrError.error };
-      }
+      // if (!passwordOrError.success) {
+      //   return { success: false, error: passwordOrError.error };
+      // }
       if (!emailOrError.success) {
         return { success: false, error: emailOrError.error };
       }

@@ -1,5 +1,9 @@
 import { Result } from '../../../core/shared/types/Result.type';
-import { v4 as uuid4 } from 'uuid';
+import {
+  v4 as uuid4,
+  validate as isUuidValid,
+  version as uuidVersion,
+} from 'uuid';
 
 export class Id {
   private readonly _value: string;
@@ -13,8 +17,8 @@ export class Id {
   }
 
   static fromString(value: string): Result<Id> {
-    if (!value || typeof value !== 'string') {
-      return { success: false, error: 'Invalid ID value' };
+    if (!value || !isUuidValid(value) || uuidVersion(value) !== 4) {
+      return { success: false, error: 'Invalid UUID format' };
     }
     return { success: true, data: new Id(value) };
   }

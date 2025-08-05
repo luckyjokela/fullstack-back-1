@@ -1,5 +1,3 @@
-// TODO: Сделать задержку на создание аккаунта и на его авторизацию и Сделать разные контроллеры
-// import { Throttle } from '@nestjs/throttler';
 import {
   Controller,
   Post,
@@ -17,18 +15,12 @@ import { UpdateUserDto } from '../../application/useCases/updateUser/UpdateUser.
 import { Result } from '../../core/shared/types/Result.type';
 
 @Controller('users')
-export class AppController {
+export class UserController {
   constructor(
     private readonly CreateUseCase: CreateUserUseCase,
     private readonly UpdateUseCase: UpdateUserUseCase,
     private readonly appService: AppService,
   ) {}
-
-  // @Post('/login')
-  // @Throttle({ default: { limit: 5, ttl: 60 } }) // 5 попыток в минуту
-  // async login(@Body() dto: LoginDto) {
-  //   // ...
-  // }
 
   @Get()
   getHello(): string {

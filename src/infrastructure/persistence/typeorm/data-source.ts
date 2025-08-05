@@ -28,17 +28,3 @@ export const AppMySQLDataSource = new DataSource({
   subscribers: [],
   migrations: [],
 });
-
-// export const AppSqliteDataSource = new DataSource({
-//   type: 'sqlite',
-//   host: 'localhost',
-//   port: 5400,
-//   username: 'your_db_user',
-//   password: 'your_password',
-//   database: 'test_db',
-//   synchronize: true,
-//   logging: false,
-//   entities: [UserEntity],
-//   subscribers: [],
-//   migrations: [],
-// });

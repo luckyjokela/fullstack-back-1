@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { UserController } from '../src/interfaces/controllers/UserController';
+import { UserController } from '../src/interfaces/controllers/user.controller';
 import { CreateUserUseCase } from '../src/application/useCases/createUser/CreateUser.usecase';
 import { INestApplication } from '@nestjs/common';
 
