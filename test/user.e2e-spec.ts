@@ -2,14 +2,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/interfaces/modules/app.module';
-import { AppController } from '../src/interfaces/controllers/app.controller';
+import { UserController } from '../src/interfaces/controllers/user.controller';
+import { UserModule } from '../src/interfaces/modules/user.module';
 import { AppService } from '../src/interfaces/services/app.service';
 import { CreateUserUseCase } from '../src/application/useCases/createUser/CreateUser.usecase';
 import { UpdateUserUseCase } from '../src/application/useCases/updateUser/UpdateUser.usecase';
 import { UserRepository } from '../src/infrastructure/persistence/typeorm/repositories/UserRepository';
 
-describe('User (e2e)', () => {
+describe('User (e2e) USER', () => {
   let app: INestApplication;
 
   const mockUserRepository = {
@@ -49,8 +49,8 @@ describe('User (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      controllers: [AppController],
+      imports: [UserModule],
+      controllers: [UserController],
       providers: [
         AppService,
         {
