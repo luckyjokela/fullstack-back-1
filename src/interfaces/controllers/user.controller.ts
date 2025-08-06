@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { AppService } from '../services/app.service';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
-import { CreateUserDto } from '../../application/useCases/createUser/CreateUser.dto';
+import { CreateUserDto } from '../../application/dtos/CreateUser.dto';
 import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateUser.usecase';
-import { UpdateUserDto } from '../../application/useCases/updateUser/UpdateUser.dto';
+import { UpdateUserDto } from '../../application/dtos/UpdateUser.dto';
 import { Result } from '../../core/shared/types/Result.type';
 
 @Controller('users')
