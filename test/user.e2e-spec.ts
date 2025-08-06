@@ -4,7 +4,6 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { UserController } from '../src/interfaces/controllers/user.controller';
 import { UserModule } from '../src/interfaces/modules/user.module';
-import { AppService } from '../src/interfaces/services/app.service';
 import { CreateUserUseCase } from '../src/application/useCases/createUser/CreateUser.usecase';
 import { UpdateUserUseCase } from '../src/application/useCases/updateUser/UpdateUser.usecase';
 import { UserRepository } from '../src/infrastructure/persistence/typeorm/repositories/UserRepository';
@@ -52,7 +51,6 @@ describe('User (e2e) USER', () => {
       imports: [UserModule],
       controllers: [UserController],
       providers: [
-        AppService,
         {
           provide: CreateUserUseCase,
           useValue: mockCreateUserUseCase,

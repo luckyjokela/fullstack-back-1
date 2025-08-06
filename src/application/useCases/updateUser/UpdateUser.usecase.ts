@@ -2,8 +2,6 @@ import { Result } from '../../../core/shared/types/Result.type';
 import { User } from '../../../core/entities/User';
 import { IUserRepository } from '../../../core/repositories/IUserRepository.interface';
 import { Email } from '../../../core/entities/variableObjects/Email';
-import { BcryptPasswordHasher } from '../../../infrastructure/services/BcryptPasswordHasher';
-import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
 import { getAppErrorMessage } from '../../../core/shared/errors/AppError';
 import {
   Username,
@@ -12,17 +10,11 @@ import {
   Surname,
 } from '../../../core/entities/variableObjects/UserBio';
 // import { Password } from '../../../core/entities/variableObjects/Password';
-import { UserRepository } from '../../../infrastructure/persistence/typeorm/repositories/UserRepository';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UpdateUserUseCase {
-  private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
-
-  constructor(
-    @Inject(UserRepository)
-    private readonly userRepository: IUserRepository,
-  ) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
   async execute(
     id: string,

@@ -13,16 +13,12 @@ import {
   Surname,
   Username,
 } from '../../../core/entities/variableObjects/UserBio';
-import { UserRepository } from '../../../infrastructure/persistence/typeorm/repositories/UserRepository';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CreateUserUseCase {
   private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
-  constructor(
-    @Inject(UserRepository)
-    private readonly userRepository: IUserRepository,
-  ) {}
+  constructor(private readonly userRepository: IUserRepository) {}
 
   async execute(
     id: string,

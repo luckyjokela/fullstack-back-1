@@ -5,7 +5,8 @@ import { CreateUserUseCase } from '../../application/useCases/createUser/CreateU
 import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateUser.usecase';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
 
-describe('AppController', () => {
+describe('UserController', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let userController: UserController;
 
   beforeEach(async () => {
@@ -23,11 +24,5 @@ describe('AppController', () => {
     }).compile();
 
     userController = app.get<UserController>(UserController);
-  });
-
-  describe('root', () => {
-    it('should return "Hello world"', () => {
-      expect(userController.getHello()).toBe('Hello World!');
-    });
   });
 });

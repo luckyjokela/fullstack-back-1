@@ -4,10 +4,8 @@ import {
   Body,
   HttpStatus,
   HttpException,
-  Get,
   Patch,
 } from '@nestjs/common';
-import { AppService } from '../services/app.service';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
 import { CreateUserDto } from '../../application/dtos/CreateUser.dto';
 import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateUser.usecase';
@@ -19,13 +17,7 @@ export class UserController {
   constructor(
     private readonly CreateUseCase: CreateUserUseCase,
     private readonly UpdateUseCase: UpdateUserUseCase,
-    private readonly appService: AppService,
   ) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
 
   @Post()
   async makeUser(

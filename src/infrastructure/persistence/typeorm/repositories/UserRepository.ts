@@ -88,7 +88,7 @@ export class UserRepository implements IUserRepository {
     return this.entityToUser(entity);
   }
 
-  async save(user: User): Promise<void> {
+  async save(user: User): Promise<User> {
     const entity = new UserEntity();
 
     entity.id = user.getIdValue();
@@ -105,5 +105,7 @@ export class UserRepository implements IUserRepository {
       console.error('Failed to save user:', error);
       throw error;
     }
+
+    return user;
   }
 }
