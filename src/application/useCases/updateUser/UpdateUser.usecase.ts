@@ -9,7 +9,6 @@ import {
   MiddleName,
   Surname,
 } from '../../../core/entities/variableObjects/UserBio';
-// import { Password } from '../../../core/entities/variableObjects/Password';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -18,7 +17,6 @@ export class UpdateUserUseCase {
 
   async execute(
     id: string,
-    // password: string,
     email: string,
     username: string,
     name: string,

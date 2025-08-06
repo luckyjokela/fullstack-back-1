@@ -4,6 +4,7 @@ import { Password } from './variableObjects/Password';
 import { Username, Name, MiddleName, Surname } from './variableObjects/UserBio';
 
 export class User {
+  getEmailValue: any;
   constructor(
     private readonly id: Id,
     private readonly email: Email,
@@ -22,6 +23,9 @@ export class User {
   getEmail(): string {
     return this.email.getValue();
   }
+  getEmailObj(): Email {
+    return this.email;
+  }
   getPassword(): Password {
     return this.password;
   }
@@ -31,13 +35,25 @@ export class User {
   getUsername(): string {
     return this.username.getValue();
   }
+  getUsernameObj(): Username {
+    return this.username;
+  }
   getName(): string {
     return this.name.getValue();
+  }
+  getNameObj(): Name {
+    return this.name;
   }
   getSurname(): string {
     return this.surname.getValue();
   }
+  getSurnameObj(): Surname {
+    return this.surname;
+  }
   getMiddleName(): string {
     return this.middleName.getValue();
+  }
+  getMiddleNameObj(): MiddleName {
+    return this.middleName;
   }
 }

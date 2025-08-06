@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UserController } from '../controllers/user.controller';
-import { AppService } from '../services/app.service';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
 import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateUser.usecase';
 import { JwtAuthGuard } from '../../auth/guards/JwtAuthGuard';
@@ -10,7 +9,6 @@ import { UserRepository } from '../../infrastructure/persistence/typeorm/reposit
   imports: [],
   controllers: [UserController],
   providers: [
-    AppService,
     CreateUserUseCase,
     UpdateUserUseCase,
     {

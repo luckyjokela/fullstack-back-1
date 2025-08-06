@@ -1,6 +1,6 @@
-// TODO Проверить на взлом password.ts и создать еще отдельно обновление пароля для пользователя
 import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
 import { Result } from '../../shared/types/Result.type';
+import zxcvbn from 'zxcvbn';
 
 export class Password {
   private readonly value: string;
@@ -16,36 +16,18 @@ export class Password {
         error: 'Password must be at least 8 characters long',
       };
     }
-    if (!/[A-Z]/.test(password)) {
-      return {
-        success: false,
-        error: 'Password must contain at least one uppercase letter',
-      };
+    const result = zxcvbn(password);
+    if (result.score < 3) {
+      return { success: false, error: 'Password is too weak' };
     }
-    if (!/[a-z]/.test(password)) {
-      return {
-        success: false,
-        error: 'Password must contain at least one lowercase letter',
-      };
-    }
-    if (!/[0-9]/.test(password)) {
-      return {
-        success: false,
-        error: 'Password must contain at least one digit',
-      };
-    }
-    if (!/[^A-Za-z0-9]/.test(password)) {
-      return {
-        success: false,
-        error: 'Password must contain at least one special character',
-      };
-    }
+
     const hashed = hasher.hash(password);
     return { success: true, data: new Password(hashed) };
   }
 
   static fromHash(hash: string): Result<Password> {
-    if (!hash || typeof hash !== 'string') {
+    const bcryptRegex = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53,}$/;
+    if (!hash || typeof hash !== 'string' || !bcryptRegex.test(hash)) {
       return { success: false, error: 'Invalid password hash' };
     }
     return { success: true, data: new Password(hash) };
