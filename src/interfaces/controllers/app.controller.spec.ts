@@ -3,6 +3,7 @@ import { AppController } from '../controllers/app.controller';
 import { AppService } from '../services/app.service';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
 import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateUser.usecase';
+import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.interface';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
 
 describe('AppController', () => {
@@ -16,7 +17,7 @@ describe('AppController', () => {
         CreateUserUseCase,
         UpdateUserUseCase,
         {
-          provide: UserRepository,
+          provide: USER_REPOSITORY_TOKEN,
           useClass: UserRepository,
         },
       ],

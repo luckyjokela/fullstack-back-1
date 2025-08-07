@@ -6,7 +6,9 @@ import { UserController } from '../src/interfaces/controllers/user.controller';
 import { UserModule } from '../src/interfaces/modules/user.module';
 import { CreateUserUseCase } from '../src/application/useCases/createUser/CreateUser.usecase';
 import { UpdateUserUseCase } from '../src/application/useCases/updateUser/UpdateUser.usecase';
-import { UserRepository } from '../src/infrastructure/persistence/typeorm/repositories/UserRepository';
+import { ChangeUserPasswordUseCase } from '../src/application/useCases/changePassword/ChangePasswordUser.usecase';
+// import { UserRepository } from '../src/infrastructure/persistence/typeorm/repositories/UserRepository';
+import { USER_REPOSITORY_TOKEN } from '../src/core/repositories/IUserRepository.interface';
 
 describe('User (e2e) USER', () => {
   let app: INestApplication;
@@ -46,6 +48,10 @@ describe('User (e2e) USER', () => {
     }),
   };
 
+  const mockChangeUserPasswordUseCase = {
+    execute: jest.fn().mockResolvedValue({ success: true }),
+  };
+
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [UserModule],
@@ -60,7 +66,11 @@ describe('User (e2e) USER', () => {
           useValue: mockUpdateUserUseCase,
         },
         {
-          provide: UserRepository,
+          provide: ChangeUserPasswordUseCase,
+          useValue: mockChangeUserPasswordUseCase,
+        },
+        {
+          provide: USER_REPOSITORY_TOKEN,
           useValue: mockUserRepository,
         },
       ],
@@ -79,7 +89,7 @@ describe('User (e2e) USER', () => {
       const dto = {
         id: '123',
         email: 'test@example.com',
-        password: 'password123',
+        password: 'password$#@%bkgfoh123',
         username: 'testuser',
         name: 'Test',
         surname: 'User',
@@ -106,7 +116,7 @@ describe('User (e2e) USER', () => {
       const dto = {
         id: '123',
         email: 'updated@example.com',
-        password: 'newpassword123',
+        password: 'newpassword%$#@542bgf123',
         username: 'updateduser',
         name: 'Updated',
         surname: 'User',

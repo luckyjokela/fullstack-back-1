@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IUserRepository } from '../../core/repositories/IUserRepository.interface';
+import {
+  IUserRepository,
+  USER_REPOSITORY_TOKEN,
+} from '../../core/repositories/IUserRepository.interface';
 import { Password } from '../../core/entities/variableObjects/Password';
 import { BcryptPasswordHasher } from '../../infrastructure/services/BcryptPasswordHasher';
 import { ValidateUserDto } from '../../application/dtos/Login.dto';
+import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService,
   ) {}

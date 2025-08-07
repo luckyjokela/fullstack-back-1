@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../strategies/JwtStrategy';
 import { AuthService } from '../services/auth.service';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
+import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.interface';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { UserRepository } from '../../infrastructure/persistence/typeorm/reposit
     JwtStrategy,
     AuthService,
     {
-      provide: 'UserRepository',
+      provide: USER_REPOSITORY_TOKEN,
       useClass: UserRepository,
     },
   ],

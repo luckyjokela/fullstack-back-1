@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UserController } from '../controllers/user.controller';
+import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.interface';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
 import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateUser.usecase';
-import { JwtAuthGuard } from '../../auth/guards/JwtAuthGuard';
-import { JwtStrategy } from '../../auth/strategies/JwtStrategy';
+import { ChangeUserPasswordUseCase } from '../../application/useCases/changePassword/ChangePasswordUser.usecase';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
 @Module({
   imports: [],
@@ -11,12 +11,11 @@ import { UserRepository } from '../../infrastructure/persistence/typeorm/reposit
   providers: [
     CreateUserUseCase,
     UpdateUserUseCase,
+    ChangeUserPasswordUseCase,
     {
-      provide: UserRepository,
+      provide: USER_REPOSITORY_TOKEN,
       useClass: UserRepository,
     },
-    JwtAuthGuard,
-    JwtStrategy,
   ],
 })
 export class UserModule {}

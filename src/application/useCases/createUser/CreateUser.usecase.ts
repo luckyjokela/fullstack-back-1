@@ -1,6 +1,9 @@
 import { Result } from '../../../core/shared/types/Result.type';
 import { User } from '../../../core/entities/User';
-import { IUserRepository } from '../../../core/repositories/IUserRepository.interface';
+import {
+  IUserRepository,
+  USER_REPOSITORY_TOKEN,
+} from '../../../core/repositories/IUserRepository.interface';
 import { Email } from '../../../core/entities/variableObjects/Email';
 import { Id } from '../../../core/entities/variableObjects/IdGenerator';
 import { Password } from '../../../core/entities/variableObjects/Password';
@@ -13,12 +16,15 @@ import {
   Surname,
   Username,
 } from '../../../core/entities/variableObjects/UserBio';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 
 @Injectable()
 export class CreateUserUseCase {
   private readonly hasher: IPasswordHasher = new BcryptPasswordHasher();
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY_TOKEN)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(
     id: string,

@@ -11,8 +11,8 @@ interface JwtPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  sign(arg0: { sub: any; email: any; }) {
-      throw new Error("Method not implemented.");
+  sign() {
+    throw new Error('Method not implemented.');
   }
   constructor() {
     super({

@@ -46,7 +46,6 @@ export class AuthController {
   }
 
   @Post('login')
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   @Throttle({ default: { limit: 4, ttl: 60 } })
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginUserDto) {

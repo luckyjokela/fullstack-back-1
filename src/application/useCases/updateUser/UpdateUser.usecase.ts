@@ -1,6 +1,9 @@
 import { Result } from '../../../core/shared/types/Result.type';
 import { User } from '../../../core/entities/User';
-import { IUserRepository } from '../../../core/repositories/IUserRepository.interface';
+import {
+  IUserRepository,
+  USER_REPOSITORY_TOKEN,
+} from '../../../core/repositories/IUserRepository.interface';
 import { Email } from '../../../core/entities/variableObjects/Email';
 import { getAppErrorMessage } from '../../../core/shared/errors/AppError';
 import {
@@ -9,11 +12,14 @@ import {
   MiddleName,
   Surname,
 } from '../../../core/entities/variableObjects/UserBio';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UpdateUserUseCase {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY_TOKEN)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute(
     id: string,
@@ -29,16 +35,12 @@ export class UpdateUserUseCase {
         return { success: false, error: 'User not found' };
       }
 
-      // const passwordOrError = Password.create(password, this.hasher);
       const emailOrError = Email.create(email);
       const usernameOrError = Username.create(username);
       const nameOrError = Name.create(name);
       const surnameOrError = Surname.create(surname);
       const middleNameOrError = MiddleName.create(middleName);
 
-      // if (!passwordOrError.success) {
-      //   return { success: false, error: passwordOrError.error };
-      // }
       if (!emailOrError.success) {
         return { success: false, error: emailOrError.error };
       }
