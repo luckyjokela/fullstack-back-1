@@ -8,7 +8,7 @@ import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.i
 @Module({
   imports: [
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET || 'secret_key',
       signOptions: { expiresIn: '1h' },
     }),
   ],

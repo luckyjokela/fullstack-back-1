@@ -16,7 +16,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  login(user: { userId: string; email: string }) {
+  login(user: { userId: string; email: string }): { access_token: string } {
     const payload = { sub: user.userId, email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
@@ -24,13 +24,12 @@ export class AuthService {
   }
 
   async validateUser(
-    email: string,
-    username: string,
+    login: string,
     password: string,
   ): Promise<ValidateUserDto | null> {
-    let user = await this.userRepository.findByEmail(email);
+    let user = await this.userRepository.findByEmail(login);
     if (!user) {
-      user = await this.userRepository.findByUsername(username);
+      user = await this.userRepository.findByUsername(login);
     }
     if (user) {
       const passwordVO = Password.fromHash(user.getPasswordValue());

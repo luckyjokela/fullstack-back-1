@@ -49,11 +49,7 @@ export class AuthController {
   @Throttle({ default: { limit: 4, ttl: 60 } })
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginUserDto) {
-    const user = await this.authService.validateUser(
-      dto.email,
-      dto.username,
-      dto.password,
-    );
+    const user = await this.authService.validateUser(dto.email, dto.username);
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }

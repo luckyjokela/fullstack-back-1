@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '../controllers/user.controller';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
+import { GetUserUseCase } from '../../application/useCases/getUser/GetUser.usecase';
 import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateUser.usecase';
+import { DeleteUserUseCase } from '../../application/useCases/deleteUser/DeleteUser.usecase';
 import { ChangeUserPasswordUseCase } from '../../application/useCases/changePassword/ChangePasswordUser.usecase';
 import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.interface';
 
@@ -27,14 +29,28 @@ describe('UserController', () => {
     }),
   };
 
+  const mockGetUserUseCase = {
+    execute: jest.fn().mockResolvedValue({
+      success: true,
+      data: {
+        getIdValue: () => '123',
+        getEmail: () => 'test@example.com',
+        getUsername: () => 'testuser',
+        getName: () => 'Test',
+        getSurname: () => 'User',
+        getMiddleName: () => 'Middle',
+      },
+    }),
+  };
+
   const mockUpdateUserUseCase = {
     execute: jest.fn().mockResolvedValue({
       success: true,
       data: {
         getIdValue: () => '123',
-        getEmail: () => 'updated@example.com',
-        getUsername: () => 'updateduser',
-        getName: () => 'Updated',
+        getEmail: () => 'test@example.com',
+        getUsername: () => 'testuser',
+        getName: () => 'Test',
         getSurname: () => 'User',
         getMiddleName: () => 'Middle',
       },
@@ -42,6 +58,10 @@ describe('UserController', () => {
   };
 
   const mockChangeUserPasswordUseCase = {
+    execute: jest.fn().mockResolvedValue({ success: true }),
+  };
+
+  const mockDeleteUserUseCase = {
     execute: jest.fn().mockResolvedValue({ success: true }),
   };
 
@@ -54,8 +74,16 @@ describe('UserController', () => {
           useValue: mockCreateUserUseCase,
         },
         {
+          provide: GetUserUseCase,
+          useValue: mockGetUserUseCase,
+        },
+        {
           provide: UpdateUserUseCase,
           useValue: mockUpdateUserUseCase,
+        },
+        {
+          provide: DeleteUserUseCase,
+          useValue: mockDeleteUserUseCase,
         },
         {
           provide: ChangeUserPasswordUseCase,

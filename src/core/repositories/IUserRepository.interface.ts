@@ -5,6 +5,7 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findByUsername(username: string): Promise<User | null>;
+  delete(id: string): Promise<void>;
 }
 
 export const USER_REPOSITORY_TOKEN = Symbol('I_USER_REPOSITORY');

@@ -20,17 +20,17 @@ export class User {
   getIdValue(): string {
     return this.id.getValue();
   }
-  getEmail(): string {
-    return this.email.getValue();
-  }
-  getEmailObj(): Email {
-    return this.email;
-  }
   getPassword(): Password {
     return this.password;
   }
   getPasswordValue(): string {
     return this.password.getValue();
+  }
+  getEmail(): string {
+    return this.email.getValue();
+  }
+  getEmailObj(): Email {
+    return this.email;
   }
   getUsername(): string {
     return this.username.getValue();

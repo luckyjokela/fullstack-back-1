@@ -88,6 +88,14 @@ export class UserRepository implements IUserRepository {
     return this.entityToUser(entity);
   }
 
+  async delete(id: string): Promise<void> {
+    try {
+      await this.repository.delete(id);
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      throw error;
+    }
+  }
   async save(user: User): Promise<User> {
     const entity = new UserEntity();
 
