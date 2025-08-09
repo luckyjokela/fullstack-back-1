@@ -7,8 +7,14 @@ import { UpdateUserUseCase } from '../../application/useCases/updateUser/UpdateU
 import { DeleteUserUseCase } from '../../application/useCases/deleteUser/DeleteUser.usecase';
 import { ChangeUserPasswordUseCase } from '../../application/useCases/changePassword/ChangePasswordUser.usecase';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
-  imports: [],
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'secret_key',
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
   controllers: [UserController],
   providers: [
     CreateUserUseCase,

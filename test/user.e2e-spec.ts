@@ -2,7 +2,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from '../src/auth/strategies/JwtStrategy';
 import { JwtAuthGuard } from '../src/auth/guards/JwtAuthGuard';
 import { UserController } from '../src/interfaces/controllers/user.controller';
@@ -90,7 +90,7 @@ describe('User (e2e) USER', () => {
       imports: [
         UserModule,
         JwtModule.register({
-          secret: process.env.JWT_SECRET || `secret`,
+          secret: process.env.JWT_SECRET || 'secret_key',
           signOptions: { expiresIn: '1h' },
         }),
       ],
@@ -124,18 +124,13 @@ describe('User (e2e) USER', () => {
         JwtAuthGuard,
       ],
     }).compile();
+
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    // const token = app
-    //   .get(JwtService)
-    //   .sign({ sub: '123', email: 'test@example.com' });
   });
 
   afterAll(async () => {
-    if (app) {
-      await app.close();
-    }
+    await app.close();
   });
 
   describe('POST /users', () => {
@@ -166,13 +161,14 @@ describe('User (e2e) USER', () => {
   });
 
   describe('Get /users/me', () => {
-    it("should show a user info in user's panel", () => {
-      // const token = app
-      //   .get(JwtService)
-      //   .sign({ sub: '123', email: 'test@example.com' });
+    it("should show a user info in user's panel", async () => {
+      const token = app
+        .get(JwtService)
+        .sign({ sub: '123', email: 'test@example.com' });
+
       return request(app.getHttpServer())
         .get('/users/me')
-        .set('Authorization', process.env.JWT_SECRET || `secret`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect({
           id: '123',
@@ -187,6 +183,9 @@ describe('User (e2e) USER', () => {
 
   describe('PATCH /users', () => {
     it('should update a user', () => {
+      const token = app
+        .get(JwtService)
+        .sign({ sub: '123', email: 'test@example.com' });
       const dto = {
         id: '123',
         email: 'updated@example.com',
@@ -199,6 +198,7 @@ describe('User (e2e) USER', () => {
 
       return request(app.getHttpServer())
         .patch('/users')
+        .set('Authorization', `Bearer ${token}`)
         .send(dto)
         .expect(200)
         .expect({
@@ -216,14 +216,15 @@ describe('User (e2e) USER', () => {
   });
 
   describe('PATCH /users/change-password', () => {
-    it('should change password', () => {
-      // const token = app
-      //   .get(JwtService)
-      //   .sign({ sub: '123', email: 'test@example.com' });
+    it('should change password', async () => {
+      const token = app
+        .get(JwtService)
+        .sign({ sub: '123', email: 'test@example.com' });
       const dto = { oldPassword: 'old', newPassword: 'new$#@%bkgfoh123' };
+
       return request(app.getHttpServer())
         .patch('/users/change-password')
-        .set('Authorization', process.env.JWT_SECRET || `secret`)
+        .set('Authorization', `Bearer ${token}`)
         .send(dto)
         .expect(200)
         .expect({ success: true });
@@ -231,15 +232,15 @@ describe('User (e2e) USER', () => {
   });
 
   describe('DELETE /users/:id', () => {
-    it('should delete a user', () => {
-      // const token = app
-      //   .get(JwtService)
-      //   .sign({ sub: '123', email: 'test@example.com' });
+    it('should delete a user', async () => {
+      const token = app
+        .get(JwtService)
+        .sign({ sub: '123', email: 'test@example.com' });
+
       return request(app.getHttpServer())
         .delete('/users/123')
-        .set('Authorization', process.env.JWT_SECRET || `secret`)
-        .expect(200)
-        .expect({ success: true });
+        .set('Authorization', `Bearer ${token}`)
+        .expect(204);
     });
   });
 });
