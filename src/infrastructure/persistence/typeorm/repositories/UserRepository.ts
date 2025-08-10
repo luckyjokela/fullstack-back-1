@@ -5,6 +5,7 @@ import { AppPostgreSQLDataSource } from '../data-source';
 import { Id } from '../../../../core/entities/variableObjects/IdGenerator';
 import { Email } from '../../../../core/entities/variableObjects/Email';
 import { Password } from '../../../../core/entities/variableObjects/Password';
+import { RefreshTokenWithExpiry } from '../../../../core/entities/variableObjects/RefreshToken';
 import { BcryptPasswordHasher } from '../../../../infrastructure/services/BcryptPasswordHasher';
 import { IPasswordHasher } from '../../../../core/shared/interface/IPasswordHasher.interface';
 import {
@@ -96,6 +97,44 @@ export class UserRepository implements IUserRepository {
       throw error;
     }
   }
+
+  async addRefreshToken(
+    userId: string,
+    token: string,
+    ip: string,
+    userAgent: string,
+  ): Promise<void> {
+    const entity = await this.repository.findOneBy({ id: userId });
+    if (!entity) throw new Error('User not found');
+
+    const refreshToken = new RefreshTokenWithExpiry(
+      token,
+      Date.now() + 7 * 24 * 60 * 60 * 1000,
+      ip,
+      userAgent,
+      false,
+    );
+
+    entity.refreshTokens.push(refreshToken);
+    await this.repository.save(entity);
+  }
+
+  async findByRefreshToken(token: string): Promise<User | null> {
+    const entity = await this.repository.findOneBy({ refreshToken: token });
+    if (!entity) return null;
+    return this.entityToUser(entity);
+  }
+
+  async hasValidRefreshToken(
+    token: string,
+    ip: string,
+    userAgent: string,
+  ): Promise<boolean> {
+    const user = await this.findByRefreshToken(token);
+    if (!user) return false;
+    return user.hasValidRefreshToken(token, ip, userAgent);
+  }
+
   async save(user: User): Promise<User> {
     const entity = new UserEntity();
 

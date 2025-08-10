@@ -5,11 +5,13 @@ import {
   HttpCode,
   HttpStatus,
   HttpException,
+  Req,
 } from '@nestjs/common';
 import { LoginUserDto } from '../../application/dtos/Login.dto';
 import { AuthService } from '../../auth/services/auth.service';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
 import { RegisterUserDto } from '../../application/dtos/Register.dto';
+import { IReq } from '../IReq/IRequest';
 import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
@@ -48,11 +50,19 @@ export class AuthController {
   @Post('login')
   @Throttle({ default: { limit: 4, ttl: 60 } })
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginUserDto) {
-    const user = await this.authService.validateUser(dto.email, dto.username);
+  async login(@Body() dto: LoginUserDto, @Req() req: IReq) {
+    const user = await this.authService.validateUser(dto.login, dto.password);
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
-    return this.authService.login(user);
+
+    const ip = req.ip ?? req.connection.remoteAddress ?? 'unknown';
+    const userAgent = req.get('User-Agent') ?? 'unknown';
+
+    return this.authService.login(
+      { userId: user.getIdValue(), email: user.getEmail() },
+      ip,
+      userAgent,
+    );
   }
 }

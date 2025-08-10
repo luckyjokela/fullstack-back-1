@@ -2,9 +2,12 @@ import { Id } from './variableObjects/IdGenerator';
 import { Email } from './variableObjects/Email';
 import { Password } from './variableObjects/Password';
 import { Username, Name, MiddleName, Surname } from './variableObjects/UserBio';
+import {
+  RefreshToken,
+  RefreshTokenWithExpiry,
+} from './variableObjects/RefreshToken';
 
 export class User {
-  getEmailValue: any;
   constructor(
     private readonly id: Id,
     private readonly email: Email,
@@ -13,6 +16,7 @@ export class User {
     private readonly name: Name,
     private readonly middleName: MiddleName,
     private readonly surname: Surname,
+    private readonly refreshToken?: RefreshToken,
   ) {}
   getId(): Id {
     return this.id;
@@ -55,5 +59,11 @@ export class User {
   }
   getMiddleNameObj(): MiddleName {
     return this.middleName;
+  }
+  getRefreshTokens(): RefreshTokenWithExpiry[] {
+    return this.refreshToken?.getTokens() ?? [];
+  }
+  hasValidRefreshToken(token: string, ip: string, userAgent: string): boolean {
+    return this.refreshToken?.hasValidToken(token, ip, userAgent) ?? false;
   }
 }

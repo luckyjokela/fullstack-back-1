@@ -5,8 +5,9 @@ import {
 } from '../../core/repositories/IUserRepository.interface';
 import { Password } from '../../core/entities/variableObjects/Password';
 import { BcryptPasswordHasher } from '../../infrastructure/services/BcryptPasswordHasher';
+import { RefreshTokenService } from '../../core/services/RefreshToken.service';
 import { ValidateUserDto } from '../../application/dtos/Login.dto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
@@ -14,15 +15,48 @@ export class AuthService {
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
-  login(user: { userId: string; email: string }): { access_token: string } {
+  async login(
+    user: { userId: string; email: string },
+    ip: string,
+    userAgent: string,
+  ): Promise<{ access_token: string; refresh_token: string; }> {
     const payload = { sub: user.userId, email: user.email };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
+    const refreshToken = this.refreshTokenService.generateToken();
+
+    // Сохраняем хэш токена в БД
+    const hashedToken = this.refreshTokenService.hashToken(refreshToken);
+    await this.userRepository.addRefreshToken(
+      user.userId,
+      hashedToken,
+      ip,
+      userAgent,
+    );
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 
+  async refreshToken(
+    refreshToken: string,
+    ip: string,
+    userAgent: string,
+  ): Promise<{ access_token: string }> {
+    const user = await this.userRepository.findByRefreshToken(refreshToken);
+    if (!user || !user.hasValidToken(refreshToken, ip, userAgent)) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const payload = { sub: user.getIdValue(), email: user.getEmail() };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
+
+    return { access_token: accessToken };
+  }
   async validateUser(
     login: string,
     password: string,
