@@ -7,6 +7,7 @@ import { Password } from '../../core/entities/variableObjects/Password';
 import { BcryptPasswordHasher } from '../../infrastructure/services/BcryptPasswordHasher';
 import { RefreshTokenUseCase } from '../../application/useCases/refreshToken/RefreshToken.usecase';
 import { ValidateUserDto } from '../../application/dtos/Login.dto';
+import { IPasswordHasher } from '../../core/shared/interface/IPasswordHasher.interface';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class AuthService {
     private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService,
     private readonly refreshTokenService: RefreshTokenUseCase,
+    private readonly hasher: IPasswordHasher = new BcryptPasswordHasher(),
   ) {}
 
   async login(
@@ -84,6 +86,6 @@ export class AuthService {
   }
 
   private comparePassword(plainText: string, hashed: string): boolean {
-    return new BcryptPasswordHasher().compare(plainText, hashed);
+    return this.hasher.compare(plainText, hashed);
   }
 }

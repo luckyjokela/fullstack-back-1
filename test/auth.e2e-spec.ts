@@ -22,7 +22,7 @@ describe('Auth (e2e)', () => {
     getIdValue: jest.fn().mockReturnValue('123'),
     getEmail: jest.fn().mockReturnValue('test@example.com'),
     getUsername: jest.fn().mockReturnValue('testuser'),
-    getPasswordValue: jest.fn().mockReturnValue('hashed_password123'),
+    getPasswordValue: jest.fn().mockReturnValue('$2b$10$...'),
     hasValidRefreshToken: jest.fn().mockReturnValue(true),
   };
 
@@ -97,7 +97,7 @@ describe('Auth (e2e)', () => {
   describe('POST /auth/login', () => {
     it('should login user and return tokens', async () => {
       const dto = {
-        email: 'test@example.com',
+        login: 'test@example.com', // ✅ Исправлено
         password: 'password123',
       };
 
@@ -110,7 +110,9 @@ describe('Auth (e2e)', () => {
       expect(response.body).toHaveProperty('refresh_token');
 
       expect(mockRefreshTokenService.generateToken).toHaveBeenCalled();
-      expect(mockRefreshTokenService.hashToken).toHaveBeenCalledWith('refresh-token-123');
+      expect(mockRefreshTokenService.hashToken).toHaveBeenCalledWith(
+        'refresh-token-123',
+      );
       expect(mockUserRepository.addRefreshToken).toHaveBeenCalledWith(
         '123',
         'hashed-refresh-token-123',
@@ -124,7 +126,7 @@ describe('Auth (e2e)', () => {
       mockUserRepository.findByUsername.mockResolvedValue(null);
 
       const dto = {
-        email: 'invalid@example.com',
+        login: 'invalid@example.com',
         password: 'wrong-password',
       };
 
