@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../strategies/JwtStrategy';
 import { AuthService } from '../services/auth.service';
+import { RefreshTokenUseCase } from '../../application/useCases/refreshToken/RefreshToken.usecase';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
 import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.interface';
 
@@ -14,6 +15,7 @@ import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.i
   ],
   providers: [
     JwtStrategy,
+    RefreshTokenUseCase,
     AuthService,
     {
       provide: USER_REPOSITORY_TOKEN,

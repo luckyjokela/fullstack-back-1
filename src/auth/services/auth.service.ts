@@ -5,7 +5,7 @@ import {
 } from '../../core/repositories/IUserRepository.interface';
 import { Password } from '../../core/entities/variableObjects/Password';
 import { BcryptPasswordHasher } from '../../infrastructure/services/BcryptPasswordHasher';
-import { RefreshTokenService } from '../../core/services/RefreshToken.service';
+import { RefreshTokenUseCase } from '../../application/useCases/refreshToken/RefreshToken.usecase';
 import { ValidateUserDto } from '../../application/dtos/Login.dto';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
@@ -15,19 +15,18 @@ export class AuthService {
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService,
-    private readonly refreshTokenService: RefreshTokenService,
+    private readonly refreshTokenService: RefreshTokenUseCase,
   ) {}
 
   async login(
-    user: { userId: string; email: string },
+    user: { userId: string; email: string; username: string },
     ip: string,
     userAgent: string,
-  ): Promise<{ access_token: string; refresh_token: string; }> {
+  ): Promise<{ access_token: string; refresh_token: string }> {
     const payload = { sub: user.userId, email: user.email };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
     const refreshToken = this.refreshTokenService.generateToken();
 
-    // Сохраняем хэш токена в БД
     const hashedToken = this.refreshTokenService.hashToken(refreshToken);
     await this.userRepository.addRefreshToken(
       user.userId,
@@ -47,8 +46,10 @@ export class AuthService {
     ip: string,
     userAgent: string,
   ): Promise<{ access_token: string }> {
-    const user = await this.userRepository.findByRefreshToken(refreshToken);
-    if (!user || !user.hasValidToken(refreshToken, ip, userAgent)) {
+    const hashedToken = this.refreshTokenService.hashToken(refreshToken);
+    const user = await this.userRepository.findByRefreshToken(hashedToken);
+
+    if (!user || !user.hasValidRefreshToken(hashedToken, ip, userAgent)) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
@@ -57,6 +58,7 @@ export class AuthService {
 
     return { access_token: accessToken };
   }
+
   async validateUser(
     login: string,
     password: string,

@@ -5,7 +5,10 @@ import { AppPostgreSQLDataSource } from '../data-source';
 import { Id } from '../../../../core/entities/variableObjects/IdGenerator';
 import { Email } from '../../../../core/entities/variableObjects/Email';
 import { Password } from '../../../../core/entities/variableObjects/Password';
-import { RefreshTokenWithExpiry } from '../../../../core/entities/variableObjects/RefreshToken';
+import {
+  RefreshToken,
+  RefreshTokenWithExpiry,
+} from '../../../../core/entities/variableObjects/RefreshToken';
 import { BcryptPasswordHasher } from '../../../../infrastructure/services/BcryptPasswordHasher';
 import { IPasswordHasher } from '../../../../core/shared/interface/IPasswordHasher.interface';
 import {
@@ -100,7 +103,7 @@ export class UserRepository implements IUserRepository {
 
   async addRefreshToken(
     userId: string,
-    token: string,
+    hashedToken: string,
     ip: string,
     userAgent: string,
   ): Promise<void> {
@@ -108,7 +111,7 @@ export class UserRepository implements IUserRepository {
     if (!entity) throw new Error('User not found');
 
     const refreshToken = new RefreshTokenWithExpiry(
-      token,
+      hashedToken,
       Date.now() + 7 * 24 * 60 * 60 * 1000,
       ip,
       userAgent,
@@ -119,10 +122,17 @@ export class UserRepository implements IUserRepository {
     await this.repository.save(entity);
   }
 
-  async findByRefreshToken(token: string): Promise<User | null> {
-    const entity = await this.repository.findOneBy({ refreshToken: token });
-    if (!entity) return null;
-    return this.entityToUser(entity);
+  async findByRefreshToken(hashedToken: string): Promise<User | null> {
+    const entities = await this.repository.find();
+
+    for (const entity of entities) {
+      const refreshToken = new RefreshToken(entity.refreshTokens);
+      if (refreshToken.hasValidToken(hashedToken, '', '')) {
+        return this.entityToUser(entity);
+      }
+    }
+
+    return null;
   }
 
   async hasValidRefreshToken(

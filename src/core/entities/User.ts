@@ -8,6 +8,9 @@ import {
 } from './variableObjects/RefreshToken';
 
 export class User {
+  getTokens(): RefreshToken {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     private readonly id: Id,
     private readonly email: Email,
@@ -60,7 +63,7 @@ export class User {
   getMiddleNameObj(): MiddleName {
     return this.middleName;
   }
-  getRefreshTokens(): RefreshTokenWithExpiry[] {
+  getRefreshToken(): RefreshTokenWithExpiry[] {
     return this.refreshToken?.getTokens() ?? [];
   }
   hasValidRefreshToken(token: string, ip: string, userAgent: string): boolean {

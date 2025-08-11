@@ -1,0 +1,284 @@
++---src
+|   |   main.ts
+|   |   
+|   +---application
+|   |   +---dtos
+|   |   |       ChangePassword.dto.ts
+|   |   |       CreateUser.dto.ts
+|   |   |       Login.dto.ts
+|   |   |       Register.dto.ts
+|   |   |       UpdateUser.dto.ts
+|   |   |       
+|   |   \---useCases
+|   |       +---changePassword
+|   |       |       ChangePasswordUser.usecase.ts
+|   |       |       
+|   |       +---createUser
+|   |       |       CreateUser.usecase.ts
+|   |       |       
+|   |       +---deleteUser
+|   |       |       DeleteUser.usecase.ts
+|   |       |       
+|   |       +---getUser
+|   |       |       GetUser.usecase.ts
+|   |       |       
+|   |       +---refreshToken
+|   |       |       RefreshToken.usecase.ts
+|   |       |       
+|   |       \---updateUser
+|   |               UpdateUser.usecase.ts
+|   |               
+|   +---auth
+|   |   +---guards
+|   |   |       JwtAuthGuard.ts
+|   |   |       
+|   |   +---modules
+|   |   |       auth.module.ts
+|   |   |       
+|   |   +---services
+|   |   |       auth.service.ts
+|   |   |       
+|   |   \---strategies
+|   |           JwtStrategy.ts
+|   |           
+|   +---core
+|   |   +---entities
+|   |   |   |   User.ts
+|   |   |   |   
+|   |   |   \---variableObjects
+|   |   |           Email.ts
+|   |   |           IdGenerator.ts
+|   |   |           Password.ts
+|   |   |           RefreshToken.ts
+|   |   |           UserBio.ts
+|   |   |           Uuid.ts
+|   |   |           
+|   |   +---repositories
+|   |   |       IUserRepository.interface.ts
+|   |   |       
+|   |   \---shared
+|   |       +---errors
+|   |       |       AppError.ts
+|   |       |       
+|   |       +---interface
+|   |       |       IPasswordHasher.interface.ts
+|   |       |       
+|   |       \---types
+|   |               Result.type.ts
+|   |               
+|   +---infrastructure
+|   |   +---other
+|   |   +---persistence
+|   |   |   +---prisma
+|   |   |   |   +---entities
+|   |   |   |   +---interface
+|   |   |   |   \---repository
+|   |   |   \---typeorm
+|   |   |       |   data-source.ts
+|   |   |       |   
+|   |   |       +---entities
+|   |   |       |       UserEntity.ts
+|   |   |       |       
+|   |   |       \---repositories
+|   |   |               UserRepository.ts
+|   |   |               
+|   |   \---services
+|   |           BcryptPasswordHasher.ts
+|   |           RefreshToken.service.ts
+|   |           
+|   \---interfaces
+|       +---controllers
+|       |       app.controller.spec.ts
+|       |       app.controller.ts
+|       |       auth.controller.ts
+|       |       user.controller.spec.ts
+|       |       user.controller.ts
+|       |       
+|       +---IReq
+|       |       IRequest.ts
+|       |       
+|       +---IRes
+|       |       IResponse.ts
+|       |       
+|       +---modules
+|       |       app.module.ts
+|       |       user.module.ts
+|       |       
+|       \---services
+|               app.service.ts
+|               
+\---test
+|       app.e2e-spec.ts
+|       auth.e2e-spec.ts
+|       jest-e2e.json
+|       user.e2e-spec.ts
+|   .env
+|   .gitignore
+|   .prettierrc
+|   eslint.config.mjs
+|   nest-cli.json
+|   package.json
+|   pnpm-lock.yaml
+|   pnpm-workspace.yaml
+|   README.md
+|   structure-2.txt
+|   structure.txt
+|   sturcture-1.txt
+|   tsconfig.build.json
+|   tsconfig.json
+|   
++---dist
+|   |   main.d.ts
+|   |   main.js
+|   |   main.js.map
+|   |   tsconfig.build.tsbuildinfo
+|   |   
+|   +---application
+|   |   +---dtos
+|   |   |       CreateUser.dto.d.ts
+|   |   |       CreateUser.dto.js
+|   |   |       CreateUser.dto.js.map
+|   |   |       Login.dto.d.ts
+|   |   |       Login.dto.js
+|   |   |       Login.dto.js.map
+|   |   |       Register.dto.d.ts
+|   |   |       Register.dto.js
+|   |   |       Register.dto.js.map
+|   |   |       ResponseUser.dto.d.ts
+|   |   |       ResponseUser.dto.js
+|   |   |       ResponseUser.dto.js.map
+|   |   |       UpdateUser.dto.d.ts
+|   |   |       UpdateUser.dto.js
+|   |   |       UpdateUser.dto.js.map
+|   |   |       
+|   |   \---useCases
+|   |       +---createUser
+|   |       |       CreateUser.usecase.d.ts
+|   |       |       CreateUser.usecase.js
+|   |       |       CreateUser.usecase.js.map
+|   |       |       
+|   |       \---updateUser
+|   |               UpdateUser.usecase.d.ts
+|   |               UpdateUser.usecase.js
+|   |               UpdateUser.usecase.js.map
+|   |               
+|   +---auth
+|   |   +---guards
+|   |   |       JwtAuthGuard.d.ts
+|   |   |       JwtAuthGuard.js
+|   |   |       JwtAuthGuard.js.map
+|   |   |       
+|   |   +---modules
+|   |   |       auth.module.d.ts
+|   |   |       auth.module.js
+|   |   |       auth.module.js.map
+|   |   |       
+|   |   +---services
+|   |   |       auth.service.d.ts
+|   |   |       auth.service.js
+|   |   |       auth.service.js.map
+|   |   |       user.service.d.ts
+|   |   |       user.service.js
+|   |   |       user.service.js.map
+|   |   |       
+|   |   \---strategies
+|   |           JwtStrategy.d.ts
+|   |           JwtStrategy.js
+|   |           JwtStrategy.js.map
+|   |           
+|   +---core
+|   |   +---entities
+|   |   |   |   User.d.ts
+|   |   |   |   User.js
+|   |   |   |   User.js.map
+|   |   |   |   
+|   |   |   \---variableObjects
+|   |   |           Email.d.ts
+|   |   |           Email.js
+|   |   |           Email.js.map
+|   |   |           IdGenerator.d.ts
+|   |   |           IdGenerator.js
+|   |   |           IdGenerator.js.map
+|   |   |           Password.d.ts
+|   |   |           Password.js
+|   |   |           Password.js.map
+|   |   |           UserBio.d.ts
+|   |   |           UserBio.js
+|   |   |           UserBio.js.map
+|   |   |           Uuid.d.ts
+|   |   |           Uuid.js
+|   |   |           Uuid.js.map
+|   |   |           
+|   |   +---repositories
+|   |   |       IUserRepository.interface.d.ts
+|   |   |       IUserRepository.interface.js
+|   |   |       IUserRepository.interface.js.map
+|   |   |       
+|   |   +---services
+|   |   |       UserService.d.ts
+|   |   |       UserService.js
+|   |   |       UserService.js.map
+|   |   |       
+|   |   \---shared
+|   |       +---errors
+|   |       |       AppError.d.ts
+|   |       |       AppError.js
+|   |       |       AppError.js.map
+|   |       |       
+|   |       +---interface
+|   |       |       IPasswordHasher.interface.d.ts
+|   |       |       IPasswordHasher.interface.js
+|   |       |       IPasswordHasher.interface.js.map
+|   |       |       
+|   |       \---types
+|   |               Result.type.d.ts
+|   |               Result.type.js
+|   |               Result.type.js.map
+|   |               
+|   +---infrastructure
+|   |   +---persistence
+|   |   |   \---typeorm
+|   |   |       |   data-source.d.ts
+|   |   |       |   data-source.js
+|   |   |       |   data-source.js.map
+|   |   |       |   
+|   |   |       +---entities
+|   |   |       |       UserEntity.d.ts
+|   |   |       |       UserEntity.js
+|   |   |       |       UserEntity.js.map
+|   |   |       |       
+|   |   |       \---repositories
+|   |   |               UserRepository.d.ts
+|   |   |               UserRepository.js
+|   |   |               UserRepository.js.map
+|   |   |               
+|   |   \---services
+|   |           BcryptPasswordHasher.d.ts
+|   |           BcryptPasswordHasher.js
+|   |           BcryptPasswordHasher.js.map
+|   |           
+|   \---interfaces
+|       +---controllers
+|       |       app.controller.d.ts
+|       |       app.controller.js
+|       |       app.controller.js.map
+|       |       auth.controller.d.ts
+|       |       auth.controller.js
+|       |       auth.controller.js.map
+|       |       user.controller.d.ts
+|       |       user.controller.js
+|       |       user.controller.js.map
+|       |       
+|       +---modules
+|       |       app.module.d.ts
+|       |       app.module.js
+|       |       app.module.js.map
+|       |       user.module.d.ts
+|       |       user.module.js
+|       |       user.module.js.map
+|       |       
+|       \---services
+|               app.service.d.ts
+|               app.service.js
+|               app.service.js.map
+|    

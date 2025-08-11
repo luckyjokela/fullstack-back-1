@@ -28,11 +28,10 @@ export class RefreshToken {
   }
 
   addRefreshToken(token: string, ip: string, userAgent: string): RefreshToken {
-    const hashedToken = this.hashToken(token);
     const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
 
     const newToken = new RefreshTokenWithExpiry(
-      hashedToken,
+      token,
       expiresAt,
       ip,
       userAgent,
@@ -44,11 +43,10 @@ export class RefreshToken {
   }
 
   hasValidToken(token: string, ip: string, userAgent: string): boolean {
-    const hashedToken = this.hashToken(token);
     const now = Date.now();
     return this.refreshTokens.some(
       (t) =>
-        t.token === hashedToken &&
+        t.token === token &&
         t.expiresAt > now &&
         !t.revoked &&
         t.ip === ip &&
