@@ -4,6 +4,8 @@ import { JwtStrategy } from '../strategies/JwtStrategy';
 import { AuthService } from '../services/auth.service';
 import { RefreshTokenUseCase } from '../../application/useCases/refreshToken/RefreshToken.usecase';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
+import { I_PASSWORD_HASHER_TOKEN } from '../../core/shared/interface/IPasswordHasher.interface';
+import { BcryptPasswordHasher } from '../../infrastructure/services/BcryptPasswordHasher';
 import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.interface';
 
 @Module({
@@ -17,6 +19,10 @@ import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.i
     JwtStrategy,
     RefreshTokenUseCase,
     AuthService,
+    {
+      provide: I_PASSWORD_HASHER_TOKEN,
+      useClass: BcryptPasswordHasher,
+    },
     {
       provide: USER_REPOSITORY_TOKEN,
       useClass: UserRepository,

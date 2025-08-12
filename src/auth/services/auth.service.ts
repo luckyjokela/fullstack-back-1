@@ -7,7 +7,10 @@ import { Password } from '../../core/entities/variableObjects/Password';
 import { BcryptPasswordHasher } from '../../infrastructure/services/BcryptPasswordHasher';
 import { RefreshTokenUseCase } from '../../application/useCases/refreshToken/RefreshToken.usecase';
 import { ValidateUserDto } from '../../application/dtos/Login.dto';
-import { IPasswordHasher } from '../../core/shared/interface/IPasswordHasher.interface';
+import {
+  I_PASSWORD_HASHER_TOKEN,
+  // IPasswordHasher,
+} from '../../core/shared/interface/IPasswordHasher.interface';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
@@ -17,7 +20,8 @@ export class AuthService {
     private readonly userRepository: IUserRepository,
     private readonly jwtService: JwtService,
     private readonly refreshTokenService: RefreshTokenUseCase,
-    private readonly hasher: IPasswordHasher = new BcryptPasswordHasher(),
+    @Inject(I_PASSWORD_HASHER_TOKEN)
+    private readonly hasher: BcryptPasswordHasher,
   ) {}
 
   async login(
@@ -25,7 +29,11 @@ export class AuthService {
     ip: string,
     userAgent: string,
   ): Promise<{ access_token: string; refresh_token: string }> {
-    const payload = { sub: user.userId, email: user.email };
+    const payload = {
+      sub: user.userId,
+      email: user.email,
+      username: user.username,
+    };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
     const refreshToken = this.refreshTokenService.generateToken();
 

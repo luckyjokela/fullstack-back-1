@@ -8,21 +8,24 @@ import { RefreshTokenUseCase } from '../src/application/useCases/refreshToken/Re
 import { AuthService } from '../src/auth/services/auth.service';
 import { JwtAuthGuard } from '../src/auth/guards/JwtAuthGuard';
 import { JwtStrategy } from '../src/auth/strategies/JwtStrategy';
-import { BcryptPasswordHasher } from '../src/infrastructure/services/BcryptPasswordHasher';
+import { I_PASSWORD_HASHER_TOKEN } from '../src/core/shared/interface/IPasswordHasher.interface';
 import { CreateUserUseCase } from '../src/application/useCases/createUser/CreateUser.usecase';
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import * as bcrypt from 'bcrypt';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication;
+
+  const hashedPassword = bcrypt.hashSync('password123', 10);
 
   const mockUser = {
     getIdValue: jest.fn().mockReturnValue('123'),
     getEmail: jest.fn().mockReturnValue('test@example.com'),
     getUsername: jest.fn().mockReturnValue('testuser'),
-    getPasswordValue: jest.fn().mockReturnValue('$2b$10$...'),
+    getPasswordValue: jest.fn().mockReturnValue(hashedPassword),
     hasValidRefreshToken: jest.fn().mockReturnValue(true),
   };
 
@@ -54,18 +57,14 @@ describe('Auth (e2e)', () => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        AuthModule,
         JwtModule.register({
           secret: 'test-secret',
           signOptions: { expiresIn: '1h' },
         }),
+        AuthModule,
       ],
       controllers: [AuthController],
       providers: [
-        {
-          provide: USER_REPOSITORY_TOKEN,
-          useValue: mockUserRepository,
-        },
         {
           provide: RefreshTokenUseCase,
           useValue: mockRefreshTokenService,
@@ -75,8 +74,12 @@ describe('Auth (e2e)', () => {
           useValue: mockCreateUserUseCase,
         },
         {
-          provide: BcryptPasswordHasher,
+          provide: I_PASSWORD_HASHER_TOKEN,
           useValue: mockBcryptPasswordHasher,
+        },
+        {
+          provide: USER_REPOSITORY_TOKEN,
+          useValue: mockUserRepository,
         },
         AuthService,
         JwtStrategy,
@@ -97,7 +100,7 @@ describe('Auth (e2e)', () => {
   describe('POST /auth/login', () => {
     it('should login user and return tokens', async () => {
       const dto = {
-        login: 'test@example.com', // ✅ Исправлено
+        login: 'test@example.com',
         password: 'password123',
       };
 
