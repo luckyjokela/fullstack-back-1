@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Result } from '../../shared/types/Result.type';
 import { isEmail } from 'validator';
 export class Email {

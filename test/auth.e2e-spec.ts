@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { USER_REPOSITORY_TOKEN } from '../src/core/repositories/IUserRepository.interface';
 import { AuthController } from '../src/interfaces/controllers/auth.controller';
 import { AuthModule } from '../src/auth/modules/auth.module';
@@ -49,7 +46,9 @@ describe('Auth (e2e)', () => {
   };
 
   const mockBcryptPasswordHasher = {
-    compare: jest.fn().mockReturnValue(true),
+    compare: jest.fn().mockImplementation((plainText) => {
+      return plainText === 'password123';
+    }),
   };
 
   beforeEach(async () => {
@@ -87,7 +86,7 @@ describe('Auth (e2e)', () => {
       ],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication<INestApplication>();
     await app.init();
   });
 
@@ -143,7 +142,6 @@ describe('Auth (e2e)', () => {
   describe('POST /auth/refresh', () => {
     it('should refresh access token', async () => {
       const refreshToken = 'valid-refresh-token';
-      const hashedToken = mockRefreshTokenService.hashToken(refreshToken);
 
       mockUserRepository.findByRefreshToken.mockResolvedValue(mockUser);
       mockUser.hasValidRefreshToken.mockReturnValue(true);
@@ -158,7 +156,6 @@ describe('Auth (e2e)', () => {
 
     it('should return 401 for invalid refresh token', async () => {
       const refreshToken = 'invalid-refresh-token';
-      const hashedToken = mockRefreshTokenService.hashToken(refreshToken);
 
       mockUserRepository.findByRefreshToken.mockResolvedValue(null);
 

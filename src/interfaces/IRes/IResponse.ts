@@ -1,3 +1,8 @@
 import { Response } from 'express';
 
-// export interface IRes extends Response {}
+export interface IRes extends Response {
+  user: {
+    userId: string;
+    email: string;
+  };
+}

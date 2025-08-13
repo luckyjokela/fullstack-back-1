@@ -57,7 +57,7 @@ export class AuthController {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
 
-    const ip = req.ip ?? req.socket.remoteAddress ?? 'unknown';
+    const ip = req.ip ?? 'unknown';
     const userAgent = req.get('User-Agent') ?? 'unknown';
 
     return this.authService.login(
