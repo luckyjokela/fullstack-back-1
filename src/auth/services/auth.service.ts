@@ -4,12 +4,11 @@ import {
   USER_REPOSITORY_TOKEN,
 } from '../../core/repositories/IUserRepository.interface';
 import { Password } from '../../core/entities/variableObjects/Password';
-import { BcryptPasswordHasher } from '../../infrastructure/services/BcryptPasswordHasher';
 import { RefreshTokenUseCase } from '../../application/useCases/refreshToken/RefreshToken.usecase';
 import { ValidateUserDto } from '../../application/dtos/Login.dto';
 import {
   I_PASSWORD_HASHER_TOKEN,
-  // IPasswordHasher,
+  IPasswordHasher,
 } from '../../core/shared/interface/IPasswordHasher.interface';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
@@ -21,7 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly refreshTokenService: RefreshTokenUseCase,
     @Inject(I_PASSWORD_HASHER_TOKEN)
-    private readonly hasher: BcryptPasswordHasher,
+    private readonly hasher: IPasswordHasher,
   ) {}
 
   async login(
