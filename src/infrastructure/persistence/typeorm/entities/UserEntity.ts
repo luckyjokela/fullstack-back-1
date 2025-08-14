@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { RefreshTokenWithExpiry } from '../../../../core/entities/variableObjects/RefreshToken';
+import { UserRoles } from '../../../../core/entities/variableObjects/Role.enum';
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity()
@@ -45,4 +46,7 @@ export class UserEntity {
 
   @Column({ name: 'Surname' })
   surname!: string;
+
+  @Column({ type: 'enum', enum: UserRoles, default: UserRoles.USER })
+  role!: UserRoles;
 }

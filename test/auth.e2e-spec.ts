@@ -23,6 +23,7 @@ describe('Auth (e2e)', () => {
     getEmail: jest.fn().mockReturnValue('test@example.com'),
     getUsername: jest.fn().mockReturnValue('testuser'),
     getPasswordValue: jest.fn().mockReturnValue(hashedPassword),
+    getRole: jest.fn().mockReturnValue('user'),
     hasValidRefreshToken: jest.fn().mockReturnValue(true),
   };
 
@@ -101,6 +102,7 @@ describe('Auth (e2e)', () => {
       const dto = {
         login: 'test@example.com',
         password: 'password123',
+        role: 'user',
       };
 
       const response = await request(app.getHttpServer())
@@ -130,6 +132,7 @@ describe('Auth (e2e)', () => {
       const dto = {
         login: 'invalid@example.com',
         password: 'wrong-password',
+        role: 'user',
       };
 
       await request(app.getHttpServer())

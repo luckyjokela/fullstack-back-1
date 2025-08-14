@@ -24,7 +24,7 @@ export class AuthService {
   ) {}
 
   async login(
-    user: { userId: string; email: string; username: string },
+    user: { userId: string; email: string; username: string; role: string },
     ip: string,
     userAgent: string,
   ): Promise<{ access_token: string; refresh_token: string }> {
@@ -32,6 +32,7 @@ export class AuthService {
       sub: user.userId,
       email: user.email,
       username: user.username,
+      role: user.role,
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
     const refreshToken = this.refreshTokenService.generateToken();
@@ -78,21 +79,17 @@ export class AuthService {
     }
     if (user) {
       const passwordVO = Password.fromHash(user.getPasswordValue());
-      if (
-        passwordVO.success &&
-        this.comparePassword(password, user.getPasswordValue())
-      ) {
+      if (!passwordVO.success) return null;
+
+      if (this.hasher.compare(password, user.getPasswordValue())) {
         return {
           userId: user.getIdValue(),
           email: user.getEmail(),
           username: user.getUsername(),
+          role: user.getRole(),
         };
       }
     }
     return null;
-  }
-
-  private comparePassword(plainText: string, hashed: string): boolean {
-    return this.hasher.compare(plainText, hashed);
   }
 }

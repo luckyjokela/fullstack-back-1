@@ -7,4 +7,5 @@ export class ValidateUserDto {
   userId!: string;
   email!: string;
   username!: string;
+  role!: string;
 }

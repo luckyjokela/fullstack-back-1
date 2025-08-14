@@ -5,8 +5,9 @@ import { AppPostgreSQLDataSource } from '../data-source';
 import { Id } from '../../../../core/entities/variableObjects/IdGenerator';
 import { Email } from '../../../../core/entities/variableObjects/Email';
 import { Password } from '../../../../core/entities/variableObjects/Password';
+import { UserRoles } from '../../../../core/entities/variableObjects/Role.enum';
 import {
-  RefreshToken,
+  // RefreshToken,
   RefreshTokenWithExpiry,
 } from '../../../../core/entities/variableObjects/RefreshToken';
 import { BcryptPasswordHasher } from '../../../../infrastructure/services/BcryptPasswordHasher';
@@ -63,6 +64,8 @@ export class UserRepository implements IUserRepository {
     if (!middleNameOrError.success) return null;
     const middleNameVO = middleNameOrError.data;
 
+    const role = entity.role ?? UserRoles.USER;
+
     return new User(
       UserId,
       emailVO,
@@ -71,6 +74,7 @@ export class UserRepository implements IUserRepository {
       nameVO,
       middleNameVO,
       UserSurname,
+      role,
     );
   }
 
@@ -90,6 +94,13 @@ export class UserRepository implements IUserRepository {
     const entity = await this.repository.findOneBy({ username });
     if (!entity) return null;
     return this.entityToUser(entity);
+  }
+
+  async findAll(): Promise<User[]> {
+    const entities = await this.repository.find();
+    return entities
+      .map((entity) => this.entityToUser(entity))
+      .filter((user): user is User => user !== null);
   }
 
   async delete(id: string): Promise<void> {
@@ -123,16 +134,13 @@ export class UserRepository implements IUserRepository {
   }
 
   async findByRefreshToken(hashedToken: string): Promise<User | null> {
-    const entities = await this.repository.find();
+    const entity = await this.repository
+      .createQueryBuilder('user')
+      .where(':token = ANY(user.refreshTokens)', { token: hashedToken })
+      .getOne();
 
-    for (const entity of entities) {
-      const refreshToken = new RefreshToken(entity.refreshTokens);
-      if (refreshToken.hasValidToken(hashedToken, '', '')) {
-        return this.entityToUser(entity);
-      }
-    }
-
-    return null;
+    if (!entity) return null;
+    return this.entityToUser(entity);
   }
 
   async hasValidRefreshToken(
@@ -140,12 +148,20 @@ export class UserRepository implements IUserRepository {
     ip: string,
     userAgent: string,
   ): Promise<boolean> {
-    const user = await this.findByRefreshToken(token);
+    const entity = await this.repository
+      .createQueryBuilder('user')
+      .where(':token = ANY(user.refreshTokens)', { token })
+      .getOne();
+
+    if (!entity) return false;
+
+    const user = this.entityToUser(entity);
     if (!user) return false;
+
     return user.hasValidRefreshToken(token, ip, userAgent);
   }
 
-  async save(user: User): Promise<User> {
+  async save(user: User): Promise<void> {
     const entity = new UserEntity();
 
     entity.id = user.getIdValue();
@@ -155,6 +171,7 @@ export class UserRepository implements IUserRepository {
     entity.name = user.getName();
     entity.middleName = user.getMiddleName();
     entity.surname = user.getSurname();
+    entity.role = user.getRole();
 
     try {
       await this.repository.save(entity);
@@ -162,7 +179,5 @@ export class UserRepository implements IUserRepository {
       console.error('Failed to save user:', error);
       throw error;
     }
-
-    return user;
   }
 }

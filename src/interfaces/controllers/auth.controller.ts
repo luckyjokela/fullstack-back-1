@@ -65,6 +65,7 @@ export class AuthController {
         userId: user.userId,
         email: user.email,
         username: user.username,
+        role: user.role,
       },
       ip,
       userAgent,

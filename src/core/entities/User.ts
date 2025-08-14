@@ -2,11 +2,11 @@ import { Id } from './variableObjects/IdGenerator';
 import { Email } from './variableObjects/Email';
 import { Password } from './variableObjects/Password';
 import { Username, Name, MiddleName, Surname } from './variableObjects/UserBio';
+import { UserRoles } from './variableObjects/Role.enum';
 import {
   RefreshToken,
   RefreshTokenWithExpiry,
 } from './variableObjects/RefreshToken';
-
 export class User {
   getTokens(): RefreshToken {
     throw new Error('Method not implemented.');
@@ -19,6 +19,7 @@ export class User {
     private readonly name: Name,
     private readonly middleName: MiddleName,
     private readonly surname: Surname,
+    private readonly role: UserRoles = UserRoles.USER,
     private readonly refreshToken?: RefreshToken,
   ) {}
   getId(): Id {
@@ -68,5 +69,12 @@ export class User {
   }
   hasValidRefreshToken(token: string, ip: string, userAgent: string): boolean {
     return this.refreshToken?.hasValidToken(token, ip, userAgent) ?? false;
+  }
+  getRole(): UserRoles {
+    return this.role;
+  }
+
+  isAdmin(): boolean {
+    return this.role === UserRoles.ADMIN;
   }
 }
