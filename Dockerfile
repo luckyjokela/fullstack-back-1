@@ -3,9 +3,16 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install -g pnpm && pnpm install
 
-COPY . .
+RUN npm install -g pnpm && pnpm install && pnpm approve-builds
+
+COPY src ./src
+COPY nest-cli.json ./
+COPY tsconfig.json ./
+COPY eslint.config.mjs ./
+COPY nest-cli.json ./
+COPY tsconfig.json ./
+COPY tsconfig.build.json ./
 
 RUN pnpm build
 
