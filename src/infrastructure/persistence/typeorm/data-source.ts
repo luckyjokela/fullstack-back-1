@@ -15,11 +15,6 @@ const getDataSourceOptions = () => {
       ssl: {
         rejectUnauthorized: false,
       },
-      extra: {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      },
     };
   }
 
@@ -34,16 +29,8 @@ const getDataSourceOptions = () => {
 };
 
 export const AppPostgreSQLDataSource = new DataSource({
-  type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  synchronize: true,
+  ...getDataSourceOptions(),
+  synchronize: process.env.DB_MODE === 'local',
   logging: false,
   entities: [UserEntity],
   subscribers: [],

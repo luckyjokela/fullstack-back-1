@@ -77,6 +77,16 @@ With Mau, you can deploy your application in just a few clicks, allowing you to 
 
 (It's need if u wanna make u project view file, but delete node_modules in file (work only on CMD!))
 
+## Make local app with docker
+
+3 simple commands for build containers with docker
+
+```bash 
+docker-compose down
+docker-compose build --no-cache
+docker-compose up -d
+```
+
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
