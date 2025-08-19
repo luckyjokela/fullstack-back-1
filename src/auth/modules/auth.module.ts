@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from '../strategies/JwtStrategy';
+import { AuthController } from '../../interfaces/controllers/auth.controller';
+import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
 import { AuthService } from '../services/auth.service';
 import { RefreshTokenUseCase } from '../../application/useCases/refreshToken/RefreshToken.usecase';
 import { UserRepository } from '../../infrastructure/persistence/typeorm/repositories/UserRepository';
@@ -20,8 +22,10 @@ import { USER_REPOSITORY_TOKEN } from '../../core/repositories/IUserRepository.i
       }),
     }),
   ],
+  controllers: [AuthController],
   providers: [
     JwtStrategy,
+    CreateUserUseCase,
     RefreshTokenUseCase,
     AuthService,
     {

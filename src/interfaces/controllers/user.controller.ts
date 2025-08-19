@@ -24,7 +24,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(
     private readonly CreateUseCase: CreateUserUseCase,

@@ -9,21 +9,23 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     await AppPostgreSQLDataSource.initialize();
     console.log('✅ Database connected');
+
     const configService = app.get(ConfigService);
+
+    const origin = `http://localhost:3000`;
+
     app.enableCors({
-      origin: `${configService.get<string>('HOST')}${configService.get<number>('PORT')}`,
+      origin,
       credentials: true,
     });
-    const port = configService.get<number>('PORT', 3002);
+
+    const port = configService.get<number>('PORT', 3001);
     await app.listen(port);
+    console.log(`🚀 Server running on port ${port}`);
   } catch (error) {
     console.error('🚫 Ошибка при запуске сервера:', error);
     throw error;
   }
 }
 
-void bootstrap().catch((err) =>
-  setTimeout(() => {
-    throw err;
-  }),
-);
+void bootstrap();

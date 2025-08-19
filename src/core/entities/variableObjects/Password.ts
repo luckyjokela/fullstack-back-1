@@ -1,6 +1,6 @@
 import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
 import { Result } from '../../shared/types/Result.type';
-import zxcvbn from 'zxcvbn';
+import * as zxcvbn from 'zxcvbn';
 
 export class Password {
   private readonly value: string;
@@ -16,7 +16,9 @@ export class Password {
         error: 'Password must be at least 8 characters long',
       };
     }
+
     const result = zxcvbn(password);
+
     if (result.score < 3) {
       return { success: false, error: 'Password is too weak' };
     }
