@@ -1,6 +1,6 @@
 import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
 import { Result } from '../../shared/types/Result.type';
-import * as zxcvbn from 'zxcvbn';
+import zxcvbn from 'zxcvbn';
 
 export class Password {
   private readonly value: string;

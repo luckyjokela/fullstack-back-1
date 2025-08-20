@@ -78,6 +78,9 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "zxcvbn": "<rootDir>/__mocks__/zxcvbn.ts"
+    },
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
