@@ -132,7 +132,7 @@ describe('User (e2e) USER', () => {
     await app.close();
   });
 
-  describe('POST /users', () => {
+  describe('POST /user', () => {
     it('should create a user', () => {
       const dto = {
         id: '123',
@@ -145,7 +145,7 @@ describe('User (e2e) USER', () => {
       };
 
       return request(app.getHttpServer())
-        .post('/users')
+        .post('/user')
         .send(dto)
         .expect(201)
         .expect({
@@ -159,14 +159,14 @@ describe('User (e2e) USER', () => {
     });
   });
 
-  describe('Get /users/me', () => {
+  describe('Get /user/me', () => {
     it("should show a user info in user's panel", async () => {
       const token = app
         .get(JwtService)
         .sign({ sub: '123', email: 'test@example.com' });
 
       return request(app.getHttpServer())
-        .get('/users/me')
+        .get('/user/me')
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect({
@@ -180,7 +180,7 @@ describe('User (e2e) USER', () => {
     });
   });
 
-  describe('PATCH /users', () => {
+  describe('PATCH /user', () => {
     it('should update a user', () => {
       const token = app
         .get(JwtService)
@@ -196,7 +196,7 @@ describe('User (e2e) USER', () => {
       };
 
       return request(app.getHttpServer())
-        .patch('/users')
+        .patch('/user')
         .set('Authorization', `Bearer ${token}`)
         .send(dto)
         .expect(200)
@@ -214,7 +214,7 @@ describe('User (e2e) USER', () => {
     });
   });
 
-  describe('PATCH /users/change-password', () => {
+  describe('PATCH /user/change-password', () => {
     it('should change password', async () => {
       const token = app
         .get(JwtService)
@@ -222,7 +222,7 @@ describe('User (e2e) USER', () => {
       const dto = { oldPassword: 'old', newPassword: 'new$#@%bkgfoh123' };
 
       return request(app.getHttpServer())
-        .patch('/users/change-password')
+        .patch('/user/change-password')
         .set('Authorization', `Bearer ${token}`)
         .send(dto)
         .expect(200)
@@ -230,14 +230,14 @@ describe('User (e2e) USER', () => {
     });
   });
 
-  describe('DELETE /users/:id', () => {
+  describe('DELETE /user/:id', () => {
     it('should delete a user', async () => {
       const token = app
         .get(JwtService)
         .sign({ sub: '123', email: 'test@example.com' });
 
       return request(app.getHttpServer())
-        .delete('/users/123')
+        .delete('/user/123')
         .set('Authorization', `Bearer ${token}`)
         .expect(204);
     });

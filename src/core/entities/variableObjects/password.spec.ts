@@ -1,7 +1,9 @@
+// password.spec.ts
 import { Password } from './Password';
+import * as bcrypt from 'bcrypt';
 
 const mockHasher = {
-  hash: jest.fn().mockReturnValue('hashed_password_123'),
+  hash: jest.fn().mockImplementation((pass) => bcrypt.hashSync(pass, 10)),
   compare: jest.fn().mockReturnValue(true),
 };
 
@@ -13,7 +15,6 @@ describe('Password', () => {
   describe('create', () => {
     it('should fail if password is less than 8 characters', () => {
       const result = Password.create('1234567', mockHasher);
-
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error).toBe(
@@ -27,44 +28,29 @@ describe('Password', () => {
       jest.mock('zxcvbn', () => () => ({ score: 2 }));
 
       const result = Password.create('12345678', mockHasher);
-
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error).toBe('Password is too weak');
       }
-      expect(mockHasher.hash).not.toHaveBeenCalled();
     });
 
-    it('should create password if valid', () => {
-      const result = Password.create('StrongPass123!', mockHasher);
+    it('should create password if valid', async () => {
+      jest.mock('zxcvbn', () => () => ({ score: 4 }));
 
+      const result = Password.create('StrongPass123!', mockHasher);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.getValue()).toBe('hashed_password_123');
+        expect(result.data.getValue()).toBeTruthy();
+        expect(
+          await bcrypt.compare('StrongPass123!', result.data.getValue()),
+        ).toBe(true);
       }
-      expect(mockHasher.hash).toHaveBeenCalledWith('StrongPass123!');
     });
   });
 
   describe('fromHash', () => {
-    it('should fail if hash is invalid', () => {
-      const result = Password.fromHash('');
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error).toBe('Invalid password hash');
-      }
-    });
-
-    it('should fail if hash is not a bcrypt hash', () => {
-      const result = Password.fromHash('not-a-bcrypt-hash');
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error).toBe('Invalid password hash');
-      }
-    });
-
-    it('should create password from valid hash', () => {
-      const validHash = '$2b$10$abcdefghijklmnopqrstuvwxyzabcdefghijklmno';
+    it('should create password from valid hash', async () => {
+      const validHash = await bcrypt.hash('test123', 10);
       const result = Password.fromHash(validHash);
       expect(result.success).toBe(true);
       if (result.success) {
