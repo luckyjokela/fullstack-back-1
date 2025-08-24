@@ -1,6 +1,7 @@
+// Password.ts
 import { IPasswordHasher } from '../../../core/shared/interface/IPasswordHasher.interface';
 import { Result } from '../../shared/types/Result.type';
-import zxcvbn from 'zxcvbn';
+import { PasswordValidator } from './PasswordValidator';
 
 export class Password {
   private readonly value: string;
@@ -10,17 +11,12 @@ export class Password {
   }
 
   static create(password: string, hasher: IPasswordHasher): Result<Password> {
-    if (!password || password.length < 8) {
-      return {
-        success: false,
-        error: 'Password must be at least 8 characters long',
-      };
-    }
-
-    const result = zxcvbn(password);
-
-    if (result.score < 3) {
-      return { success: false, error: 'Password is too weak' };
+    const validation = PasswordValidator.validate(password);
+    if (!validation.success) {
+      if (!validation.error) {
+        return { success: false, error: 'Invalid password' };
+      }
+      return { success: false, error: validation.error };
     }
 
     const hashed = hasher.hash(password);
