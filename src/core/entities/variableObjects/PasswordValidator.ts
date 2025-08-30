@@ -1,4 +1,3 @@
-// PasswordValidator.ts
 export class PasswordValidator {
   static validate(password: string): { success: boolean; error?: string } {
     if (!password || typeof password !== 'string') {

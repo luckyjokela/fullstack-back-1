@@ -1,3 +1,4 @@
+import { Result } from '../../core/shared/types/Result.type';
 import { JwtService } from '@nestjs/jwt';
 import {
   IUserRepository,
@@ -49,6 +50,22 @@ export class AuthService {
       access_token: accessToken,
       refresh_token: refreshToken,
     };
+  }
+
+  async confirmEmail(token: string): Promise<Result<void>> {
+    const user = await this.userRepository.findByConfirmationToken(token);
+    if (!user) {
+      return { success: false, error: 'Invalid or expired confirmation token' };
+    }
+
+    const confirmedUser = user.confirmEmail();
+
+    try {
+      await this.userRepository.save(confirmedUser);
+      return { success: true, data: undefined };
+    } catch {
+      return { success: false, error: 'Failed to save user' };
+    }
   }
 
   async refreshToken(

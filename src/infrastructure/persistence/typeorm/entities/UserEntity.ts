@@ -1,7 +1,9 @@
 import { UserRoles } from '../../../../core/entities/variableObjects/Role.enum';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Unique, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
+@Unique(['Email'])
+@Unique(['Username'])
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'Id' })
   id!: string;
@@ -35,4 +37,10 @@ export class UserEntity {
 
   @Column({ type: 'enum', enum: UserRoles, default: UserRoles.USER })
   role!: UserRoles;
+
+  @Column({ default: false })
+  isEmailConfirmed!: boolean;
+
+  @Column({ nullable: true })
+  confirmationToken?: string;
 }

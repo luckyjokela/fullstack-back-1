@@ -19,6 +19,8 @@ export interface IUserRepository {
     ip: string,
     userAgent: string,
   ): Promise<boolean>;
+  findByConfirmationToken(token: string): Promise<User | null>;
+  updateEmailConfirmation(userId: string, token: string): Promise<void>;
 }
 
 export const USER_REPOSITORY_TOKEN = Symbol('I_USER_REPOSITORY');

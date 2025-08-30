@@ -12,6 +12,7 @@ import { LoginUserDto } from '../../application/dtos/Login.dto';
 import { AuthService } from '../../auth/services/auth.service';
 import { CreateUserUseCase } from '../../application/useCases/createUser/CreateUser.usecase';
 import { RegisterUserDto } from '../../application/dtos/Register.dto';
+import { ConfirmEmailDto } from '../../application/dtos/ConfirmEmail.dto';
 import { RefreshTokenDto } from '../../application/dtos/RefreshToken.dto';
 import { IReq } from '../IReq/IRequest';
 import { IRes } from '../IRes/IResponse';
@@ -85,6 +86,12 @@ export class AuthController {
     });
 
     return { success: true };
+  }
+
+  @Post('confirm-email')
+  @HttpCode(HttpStatus.OK)
+  async confirmEmail(@Body() dto: ConfirmEmailDto) {
+    return this.authService.confirmEmail(dto.token);
   }
 
   @Post('refresh')

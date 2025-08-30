@@ -6,7 +6,10 @@ import { Id } from '../../../../core/entities/variableObjects/IdGenerator';
 import { Email } from '../../../../core/entities/variableObjects/Email';
 import { Password } from '../../../../core/entities/variableObjects/Password';
 import { UserRoles } from '../../../../core/entities/variableObjects/Role.enum';
-import { RefreshTokenWithExpiry } from '../../../../core/entities/variableObjects/RefreshToken';
+import {
+  // RefreshToken,
+  RefreshTokenWithExpiry,
+} from '../../../../core/entities/variableObjects/RefreshToken';
 import { BcryptPasswordHasher } from '../../../../infrastructure/services/BcryptPasswordHasher';
 import { IPasswordHasher } from '../../../../core/shared/interface/IPasswordHasher.interface';
 import {
@@ -63,6 +66,9 @@ export class UserRepository implements IUserRepository {
 
     const role = entity.role ?? UserRoles.USER;
 
+    const isEmailConfirmed = entity.isEmailConfirmed ?? false;
+    const confirmationToken = entity.confirmationToken || undefined;
+
     return new User(
       UserId,
       emailVO,
@@ -72,6 +78,8 @@ export class UserRepository implements IUserRepository {
       middleNameVO,
       UserSurname,
       role,
+      isEmailConfirmed,
+      confirmationToken,
     );
   }
 
@@ -107,6 +115,26 @@ export class UserRepository implements IUserRepository {
       console.error('Failed to delete user:', error);
       throw error;
     }
+  }
+
+  async findByConfirmationToken(token: string): Promise<User | null> {
+    const entity = await this.repository.findOne({
+      where: { confirmationToken: token },
+    });
+    if (!entity) return null;
+    return this.entityToUser(entity);
+  }
+
+  async updateEmailConfirmation(userId: string, token: string): Promise<void> {
+    const entity = await this.repository.findOneBy({ id: userId });
+    if (!entity || entity.confirmationToken !== token) {
+      throw new Error('Invalid confirmation token');
+    }
+
+    entity.isEmailConfirmed = true;
+    entity.confirmationToken = undefined;
+
+    await this.repository.save(entity);
   }
 
   async addRefreshToken(
@@ -169,6 +197,8 @@ export class UserRepository implements IUserRepository {
     entity.middleName = user.getMiddleName();
     entity.surname = user.getSurname();
     entity.role = user.getRole();
+    entity.isEmailConfirmed = user.getIsEmailConfirmed();
+    entity.confirmationToken = user.getConfirmationToken();
 
     try {
       await this.repository.save(entity);

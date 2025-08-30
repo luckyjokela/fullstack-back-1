@@ -8,9 +8,6 @@ import {
   RefreshTokenWithExpiry,
 } from './variableObjects/RefreshToken';
 export class User {
-  getTokens(): RefreshToken {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     private readonly id: Id,
     private readonly email: Email,
@@ -20,6 +17,8 @@ export class User {
     private readonly middleName: MiddleName,
     private readonly surname: Surname,
     private readonly role: UserRoles = UserRoles.USER,
+    private readonly isEmailConfirmed: boolean = false,
+    private readonly confirmationToken?: string,
     private readonly refreshToken?: RefreshToken,
   ) {}
   getId(): Id {
@@ -76,5 +75,29 @@ export class User {
 
   isAdmin(): boolean {
     return this.role === UserRoles.ADMIN;
+  }
+
+  getIsEmailConfirmed(): boolean {
+    return this.isEmailConfirmed;
+  }
+
+  getConfirmationToken(): string | undefined {
+    return this.confirmationToken;
+  }
+
+  confirmEmail(): User {
+    return new User(
+      this.id,
+      this.email,
+      this.password,
+      this.username,
+      this.name,
+      this.middleName,
+      this.surname,
+      this.role,
+      true,
+      undefined,
+      this.refreshToken,
+    );
   }
 }
