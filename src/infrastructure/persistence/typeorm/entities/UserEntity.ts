@@ -2,10 +2,9 @@ import { UserRoles } from '../../../../core/entities/variableObjects/Role.enum';
 import { Entity, Unique, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-@Unique(['Email'])
-@Unique(['Username'])
+@Unique(['email', 'username'])
 export class UserEntity {
-  @PrimaryGeneratedColumn('uuid', { name: 'Id' })
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column({ type: 'jsonb', default: [] })
@@ -17,22 +16,22 @@ export class UserEntity {
     revoked: boolean;
   }>;
 
-  @Column({ name: 'Email', unique: true })
+  @Column({ unique: true }) // ✅ email -> email
   email!: string;
 
-  @Column({ name: 'Password' })
-  password!: string;
-
-  @Column({ name: 'Username', unique: true })
+  @Column({ unique: true }) // ✅ username -> username
   username!: string;
 
-  @Column({ name: 'Name' })
+  @Column()
+  password!: string;
+
+  @Column()
   name!: string;
 
-  @Column({ name: 'MiddleName' })
+  @Column()
   middleName!: string;
 
-  @Column({ name: 'Surname' })
+  @Column()
   surname!: string;
 
   @Column({ type: 'enum', enum: UserRoles, default: UserRoles.USER })
