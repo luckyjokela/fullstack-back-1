@@ -5,4 +5,5 @@ export interface IRes extends Response {
     userId: string;
     email: string;
   };
+  cookies?: { [key: string]: string };
 }

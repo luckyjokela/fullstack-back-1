@@ -6,6 +6,7 @@ import { CreateUserUseCase } from '../../application/useCases/createUser/CreateU
 import { LoginUserDto } from '../../application/dtos/Login.dto';
 import { RefreshTokenDto } from '../../application/dtos/RefreshToken.dto';
 import { IReq } from '../IReq/IRequest';
+import { IRes } from '../IRes/IResponse';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -25,6 +26,12 @@ describe('AuthController', () => {
   const mockRequest: Partial<IReq> = {
     ip: '192.168.1.1',
     get: jest.fn().mockReturnValue('Mozilla/5.0'),
+  };
+
+  const mockResponse: Partial<IRes> = {
+    cookie: jest.fn(),
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -139,7 +146,11 @@ describe('AuthController', () => {
       mockAuthService.validateUser.mockResolvedValue(mockUser);
       mockAuthService.login.mockResolvedValue(mockTokens);
 
-      const result = await controller.login(dto, mockRequest as IReq);
+      const result = await controller.login(
+        dto,
+        mockRequest as IReq,
+        mockResponse as IRes,
+      );
 
       expect(authService.validateUser).toHaveBeenCalledWith(
         dto.login,
@@ -162,9 +173,9 @@ describe('AuthController', () => {
 
       mockAuthService.validateUser.mockResolvedValue(null);
 
-      await expect(controller.login(dto, mockRequest as IReq)).rejects.toThrow(
-        'Invalid credentials',
-      );
+      await expect(
+        controller.login(dto, mockRequest as IReq, mockResponse as IRes),
+      ).rejects.toThrow('Invalid credentials');
     });
   });
 

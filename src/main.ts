@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './interfaces/modules/app.module';
 import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
 import { AppPostgreSQLDataSource } from './infrastructure/persistence/typeorm/data-source';
 
 async function bootstrap() {
@@ -18,7 +19,7 @@ async function bootstrap() {
       origin,
       credentials: true,
     });
-
+    app.use(cookieParser);
     const port = configService.get<number>('PORT', 3001);
     await app.listen(port);
     console.log(`🚀 Server running on port ${port}`);
