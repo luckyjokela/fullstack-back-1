@@ -16,10 +16,10 @@ export class UserEntity {
     revoked: boolean;
   }>;
 
-  @Column({ unique: true }) // ✅ email -> email
+  @Column({ unique: true })
   email!: string;
 
-  @Column({ unique: true }) // ✅ username -> username
+  @Column({ unique: true })
   username!: string;
 
   @Column()

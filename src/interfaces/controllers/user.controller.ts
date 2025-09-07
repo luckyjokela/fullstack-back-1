@@ -75,6 +75,9 @@ export class UserController {
       id: result.data.getIdValue(),
       email: result.data.getEmail(),
       username: result.data.getUsername(),
+      name: result.data.getName(),
+      surname: result.data.getSurname(),
+      middleName: result.data.getMiddleName(),
     };
   }
 

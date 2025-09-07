@@ -85,7 +85,11 @@ export class AuthController {
       maxAge: 3600000,
     });
 
-    return { success: true };
+    return {
+      success: true,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    };
   }
 
   @Post('confirm-email')

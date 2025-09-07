@@ -102,13 +102,15 @@ describe('Auth (e2e)', () => {
       const dto = {
         login: 'test@example.com',
         password: 'password123',
-        role: 'user',
       };
 
       const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send(dto)
-        .expect(200);
+        .expect(200)
+        .expect((res) => {
+          expect(res.headers['set-cookie']).toBeDefined();
+        });
 
       expect(response.body).toHaveProperty('access_token');
       expect(response.body).toHaveProperty('refresh_token');

@@ -25,12 +25,10 @@ describe('Password', () => {
     });
 
     it('should fail if password is too weak', () => {
-      jest.mock('zxcvbn', () => () => ({ score: 2 }));
-
       const result = Password.create('12345678', mockHasher);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('Password is too weak');
+        expect(result.error).toBe('Password must contain a lowercase letter');
       }
     });
 

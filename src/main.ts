@@ -19,7 +19,7 @@ async function bootstrap() {
       origin,
       credentials: true,
     });
-    app.use(cookieParser);
+    app.use(cookieParser());
     const port = configService.get<number>('PORT', 3001);
     await app.listen(port);
     console.log(`🚀 Server running on port ${port}`);

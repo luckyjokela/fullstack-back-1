@@ -136,6 +136,7 @@ describe('AuthController', () => {
         userId: '123',
         email: 'test@example.com',
         username: 'testuser',
+        role: 'user',
       };
 
       const mockTokens = {
@@ -162,7 +163,15 @@ describe('AuthController', () => {
         'Mozilla/5.0',
       );
 
-      expect(result).toEqual(mockTokens);
+      expect(mockResponse.cookie).toHaveBeenCalledWith(
+        'access_token',
+        'access-token-123',
+        expect.objectContaining({
+          httpOnly: true,
+        }),
+      );
+
+      expect(result).toEqual({ success: true });
     });
 
     it('should throw UnauthorizedException if credentials are invalid', async () => {
