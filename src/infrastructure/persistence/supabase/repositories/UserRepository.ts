@@ -6,10 +6,7 @@ import { Id } from '../../../../core/entities/variableObjects/IdGenerator';
 import { Email } from '../../../../core/entities/variableObjects/Email';
 import { Password } from '../../../../core/entities/variableObjects/Password';
 import { UserRoles } from '../../../../core/entities/variableObjects/Role.enum';
-import {
-  // RefreshToken,
-  RefreshTokenWithExpiry,
-} from '../../../../core/entities/variableObjects/RefreshToken';
+import { RefreshTokenWithExpiry } from '../../../../core/entities/variableObjects/RefreshToken';
 import { BcryptPasswordHasher } from '../../../../infrastructure/services/BcryptPasswordHasher';
 import { IPasswordHasher } from '../../../../core/shared/interface/IPasswordHasher.interface';
 import {
