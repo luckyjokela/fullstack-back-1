@@ -78,6 +78,7 @@ export class UserController {
       name: result.data.getName(),
       surname: result.data.getSurname(),
       middleName: result.data.getMiddleName(),
+      role: result.data.getRole(),
     };
   }
 
