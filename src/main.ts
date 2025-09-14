@@ -9,7 +9,6 @@ async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
     await AppPostgreSQLDataSource.initialize();
-    console.log('✅ Database connected');
 
     const configService = app.get(ConfigService);
 
@@ -20,9 +19,10 @@ async function bootstrap() {
       credentials: true,
     });
     app.use(cookieParser());
+    // app.setGlobalPrefix(configService.get<string>('API_PREFIX', '/api'));
     const port = configService.get<number>('PORT', 3001);
-    await app.listen(port);
-    console.log(`🚀 Server running on port ${port}`);
+    const nginxIp = configService.get<string>('localIp', '0.0.0.0');
+    await app.listen(port, nginxIp);
   } catch (error) {
     console.error('🚫 Ошибка при запуске сервера:', error);
     throw error;
